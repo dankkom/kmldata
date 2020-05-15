@@ -2,18 +2,18 @@
 """
 
 
+import json
 import os
 import random
 
-from lxml import etree
 import pandas as pd
 import pykml
+from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
 
 
-ICON_SHAPES = {
-    "donut": "http://maps.google.com/mapfiles/kml/shapes/donut.png",
-}
+with open("icons.json", "r") as f:
+    ICON_SHAPES = json.load(f)
 
 
 class Options:
