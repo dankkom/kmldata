@@ -30,7 +30,7 @@ class Options:
         self.color = None
         # Height of points by value in column `height_col`
         self.height = None
-        self.shape = None
+        self.shape = ICON_SHAPES["donut"]
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
 
@@ -47,8 +47,6 @@ def make_point(row, opt):
     placemark = KML.Placemark()
     if opt.name:
         placemark.append(KML.name(row[opt.name]))
-    if opt.shape:
-        placemark.append(opt.shape)
     point = KML.Point(KML.coordinates(f"{lon},{lat}"))
     placemark.append(point)
     if opt.color is not None:
@@ -139,7 +137,7 @@ def make_kml(data, opt, doc_name="Default"):
     kml.append(doc)
 
     if opt.color is not None:
-        styles = make_styles(data, opt.color, ICON_SHAPES["donut"])
+        styles = make_styles(data, opt.color, icon_shape=opt.shape)
         for style in styles:
             doc.append(style)
 
