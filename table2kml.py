@@ -35,6 +35,13 @@ class Options:
             self.__setattr__(key, kwargs[key])
 
 
+def make_description(row, data_cols):
+    description = KML.description(
+        "\n".join([f"{col}: {row[col]}" for col in data_cols])
+    )
+    return description
+
+
 def make_point(row, opt):
     lat, lon = row[opt.lat], row[opt.lon]
     placemark = KML.Placemark()
@@ -47,9 +54,7 @@ def make_point(row, opt):
     if opt.color is not None:
         style_url = "#" + opt.color + "_" + str(row[opt.color])
         placemark.append(KML.styleUrl(style_url))
-    description = KML.description(
-        "\n".join([f"{col}: {row[col]}" for col in opt.data_cols])
-    )
+    description = make_description(row, opt.data_cols)
     placemark.append(description)
     return placemark
 
