@@ -28,8 +28,8 @@ class Options:
         self.folders = []
         # Color points by value in column `color_col`
         self.color = None
-        # Height of points by value in column `height_col`
-        self.height = None
+        # Altitude of points (relative to ground) by value in column `height_col`
+        self.altitude = None
         self.shape = ICON_SHAPES["donut"]
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
@@ -47,8 +47,13 @@ def make_point(row, opt):
     placemark = KML.Placemark()
     if opt.name:
         placemark.append(KML.name(row[opt.name]))
-    point = KML.Point(KML.coordinates(f"{lon},{lat}"))
+    # Point
+    altitude = row[opt.altitude] if opt.altitude is not None else 0
+    point = KML.Point(KML.coordinates(f"{lon},{lat},{altitude}"))
+    alt_mode = KML.altitudeMode("relativeToGround")
+    point.append(alt_mode)
     placemark.append(point)
+    # Style
     if opt.color is not None:
         style_url = "#" + opt.color + "_" + str(row[opt.color])
         placemark.append(KML.styleUrl(style_url))
