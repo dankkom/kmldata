@@ -42,7 +42,7 @@ def make_description(row, data_cols):
     return description
 
 
-def make_point(row, opt):
+def make_placemark(row, opt):
     lat, lon = row[opt.lat], row[opt.lon]
     placemark = KML.Placemark()
     if opt.name:
@@ -66,8 +66,8 @@ def make_folder(data, name, opt):
     folder = KML.Folder(KML.name(name))
     for i in range(data.shape[0]):
         row = data.iloc[i]
-        point = make_point(row, opt)
-        folder.append(point)
+        placemark = make_placemark(row, opt)
+        folder.append(placemark)
     return folder
 
 
@@ -157,7 +157,7 @@ def make_kml(data, opt, doc_name="Default"):
 
     for i in range(data.shape[0]):
         row = data.iloc[i]
-        placemark = make_point(row, opt)
+        placemark = make_placemark(row, opt)
         doc.append(placemark)
     return kml
 
