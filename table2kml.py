@@ -1,13 +1,13 @@
 """Transform an Excel file to a KML file
+
+Group the placemarks by folders, color & shapes based on values in the table
+
 """
 
 
 import json
-import os
 import random
 
-import pandas as pd
-import pykml
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
 
@@ -17,6 +17,13 @@ with open("icons.json", "r") as f:
 
 
 class Options:
+    """An object to store options passed to the functions in this module
+
+    Required parameters
+    -------------------
+    lat, lon : float
+        The column names of a Pandas DataFrame coordinates (latitude, longitude) 
+    """
     def __init__(self, lat, lon, **kwargs):
         self.lat = lat
         self.lon = lon
@@ -36,6 +43,20 @@ class Options:
 
 
 def make_description(row, data_cols):
+    """Create a description KML object with the data in row[data_cols]
+
+    Parameters
+    ----------
+    row : numpy.array
+        A row of dataframe with the information to use in the description text
+    data_cols : list
+        A list of columns in the row
+
+    Returns
+    -------
+    KML.description
+        The KML description object
+    """
     description = KML.description(
         "\n".join([f"{col}: {row[col]}" for col in data_cols])
     )
@@ -43,6 +64,20 @@ def make_description(row, data_cols):
 
 
 def make_placemark(row, opt):
+    """Create a placemark KML object with data in `row` and configuration in opt
+
+    Parameters
+    ----------
+    row : numpy.array, dict, namedtuple
+        An iterable with values accessible by a key
+    opt : Options
+        The options to use as parameters
+
+    Returns
+    -------
+    KML.Placemark
+        A KML placemark object
+    """
     lat, lon = row[opt.lat], row[opt.lon]
     placemark = KML.Placemark()
     if opt.name:
@@ -63,6 +98,22 @@ def make_placemark(row, opt):
 
 
 def make_folder(data, name, opt):
+    """Create a folder with the data provided
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        The data used to create the placemarks
+    name : str
+        The name of the folder created
+    opt : Options
+        Options to create the placemarks
+
+    Returns
+    -------
+    KML.Folder
+        Resulting KML folder with placemarks
+    """
     folder = KML.Folder(KML.name(name))
     for i in range(data.shape[0]):
         row = data.iloc[i]
@@ -72,6 +123,25 @@ def make_folder(data, name, opt):
 
 
 def make_tree(parent, data, folders, opt):
+    """Create a tree of folders
+
+    Parameters
+    ----------
+    parent : KML object
+        The parent object to append to
+    data : pandas.DataFrame
+        The data with the columns to be used to build the tree
+    folders : list
+        List of columns names in data
+    opt : Options
+        The options for this function
+
+    Returns
+    -------
+    parent
+        The parent object with the tree appended to it
+    """
+    # pylint: disable=invalid-name
     for l0 in data[folders[0]].unique():
         data0 = data[data[folders[0]] == l0]
         if len(folders) > 1:
@@ -93,6 +163,24 @@ def make_tree(parent, data, folders, opt):
 
 
 def make_style(style_name, icon_shape, icon_color, label_color):
+    """Create a KML style object with the given parameters
+
+    Parameters
+    ----------
+    style_name : str
+        The name of style
+    icon_shape : str
+        URL of the image to use as icon
+    icon_color : str
+        Hex color code for the icon
+    label_color : str
+        Hex color code for the label
+
+    Returns
+    -------
+    KML.Style
+        The style with the specified settings
+    """
     style = KML.Style()
 
     icon_style = KML.IconStyle(
@@ -115,6 +203,13 @@ def make_style(style_name, icon_shape, icon_color, label_color):
 
 
 def random_color():
+    """Generate a random color value for a KML style
+
+    Returns
+    -------
+    str
+        Random color string value
+    """
     r = hex(random.randint(0, 255))[2:]
     g = hex(random.randint(0, 255))[2:]
     b = hex(random.randint(0, 255))[2:]
@@ -123,6 +218,24 @@ def random_color():
 
 
 def make_styles(data, icon_color_col, icon_shape, label_color="FFFFFFFF"):
+    """Create a list of styles accordingly the data and parameters
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        The Pandas DataFrame to use as input for the styles
+    icon_color_col : str
+        The column name of `data` to use as input of color in styles
+    icon_shape : str
+        The column name of `data` to use as input of icon shape in styles
+    label_color : str, optional
+        The color of placemarks' labels, by default "FFFFFFFF"
+
+    Returns
+    -------
+    list
+        A list of styles to append to a KML document
+    """
     styles = []
     for name in data[icon_color_col].unique():
         icon_color = random_color()
@@ -137,6 +250,22 @@ def make_styles(data, icon_color_col, icon_shape, label_color="FFFFFFFF"):
 
 
 def make_kml(data, opt, doc_name="Default"):
+    """Create a KML object with data and opt configuration
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        A Pandas DataFrame with the data to use as input
+    opt : Options
+        An Options instance with the configuration to output the KML
+    doc_name : str, optional
+        The document name of KML object, by default "Default"
+
+    Returns
+    -------
+    pykml.KML
+        The resulting KML object
+    """
     kml = KML.kml()
     doc = KML.Document(KML.name(doc_name))
     kml.append(doc)
@@ -163,5 +292,15 @@ def make_kml(data, opt, doc_name="Default"):
 
 
 def save_kml(kml, filepath):
+    """Save a KML object to a file
+
+    Parameters
+    ----------
+    kml : pykml.KML
+        The object to save
+    filepath : str
+        Path to save the file
+    """
+    # pylint: disable=c-extension-no-member
     with open(filepath, "wb") as f:
         f.write(etree.tostring(kml, pretty_print=True))
