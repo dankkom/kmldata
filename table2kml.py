@@ -217,16 +217,24 @@ def make_style(
     return style
 
 
-def random_color() -> str:
+def random_color(seed: int = 0) -> str:
     """Generate a random color value for a KML style
+
+    Parameters
+    ----------
+    seed : int
+        The seed to random generator for reproducible code
 
     Returns
     -------
     str
         Random color string value
     """
+    random.seed(seed)
     r = hex(random.randint(0, 255))[2:]
+    random.seed(seed+1)
     g = hex(random.randint(0, 255))[2:]
+    random.seed(seed+2)
     b = hex(random.randint(0, 255))[2:]
     a = "ff"
     return "".join((a, b, g, r)).upper()
