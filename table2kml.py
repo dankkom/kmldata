@@ -7,7 +7,9 @@ Group the placemarks by folders, color & shapes based on values in the table
 
 import json
 import random
+from typing import Any, List
 
+import pandas as pd
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
 
@@ -42,12 +44,12 @@ class Options:
             self.__setattr__(key, kwargs[key])
 
 
-def make_description(row, data_cols):
+def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
     """Create a description KML object with the data in row[data_cols]
 
     Parameters
     ----------
-    row : numpy.array
+    row : pd.core.series.Series
         A row of dataframe with the information to use in the description text
     data_cols : list
         A list of columns in the row
@@ -63,12 +65,12 @@ def make_description(row, data_cols):
     return description
 
 
-def make_placemark(row, opt):
+def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
     """Create a placemark KML object with data in `row` and configuration in opt
 
     Parameters
     ----------
-    row : numpy.array, dict, namedtuple
+    row : pd.core.series.Series, dict, namedtuple
         An iterable with values accessible by a key
     opt : Options
         The options to use as parameters
@@ -97,12 +99,15 @@ def make_placemark(row, opt):
     return placemark
 
 
-def make_folder(data, name, opt):
+def make_folder(
+        data: pd.core.frame.DataFrame,
+        name: str, opt: Options
+    ) -> KML.Folder:
     """Create a folder with the data provided
 
     Parameters
     ----------
-    data : pandas.DataFrame
+    data : pd.core.frame.DataFrame
         The data used to create the placemarks
     name : str
         The name of the folder created
@@ -122,14 +127,19 @@ def make_folder(data, name, opt):
     return folder
 
 
-def make_tree(parent, data, folders, opt):
+def make_tree(
+        parent: Any,
+        data: pd.core.frame.DataFrame,
+        folders: List[str],
+        opt: Options
+    ) -> Any:
     """Create a tree of folders
 
     Parameters
     ----------
     parent : KML object
         The parent object to append to
-    data : pandas.DataFrame
+    data : pd.core.frame.DataFrame
         The data with the columns to be used to build the tree
     folders : list
         List of columns names in data
@@ -162,7 +172,12 @@ def make_tree(parent, data, folders, opt):
     return parent
 
 
-def make_style(style_name, icon_shape, icon_color, label_color):
+def make_style(
+        style_name: str,
+        icon_shape: str,
+        icon_color: str,
+        label_color: str
+    ) -> KML.Style:
     """Create a KML style object with the given parameters
 
     Parameters
@@ -202,7 +217,7 @@ def make_style(style_name, icon_shape, icon_color, label_color):
     return style
 
 
-def random_color():
+def random_color() -> str:
     """Generate a random color value for a KML style
 
     Returns
@@ -217,12 +232,17 @@ def random_color():
     return "".join((a, b, g, r)).upper()
 
 
-def make_styles(data, icon_color_col, icon_shape, label_color="FFFFFFFF"):
+def make_styles(
+        data: pd.core.frame.DataFrame,
+        icon_color_col: str,
+        icon_shape: str,
+        label_color: str = "FFFFFFFF"
+    ) -> List[KML.Style]:
     """Create a list of styles accordingly the data and parameters
 
     Parameters
     ----------
-    data : pandas.DataFrame
+    data : pd.core.frame.DataFrame
         The Pandas DataFrame to use as input for the styles
     icon_color_col : str
         The column name of `data` to use as input of color in styles
@@ -249,12 +269,16 @@ def make_styles(data, icon_color_col, icon_shape, label_color="FFFFFFFF"):
     return styles
 
 
-def make_kml(data, opt, doc_name="Default"):
+def make_kml(
+        data: pd.core.frame.DataFrame,
+        opt: Options,
+        doc_name: str = "Default"
+    ) -> KML.kml:
     """Create a KML object with data and opt configuration
 
     Parameters
     ----------
-    data : pandas.DataFrame
+    data : pd.core.frame.DataFrame
         A Pandas DataFrame with the data to use as input
     opt : Options
         An Options instance with the configuration to output the KML
@@ -291,12 +315,12 @@ def make_kml(data, opt, doc_name="Default"):
     return kml
 
 
-def save_kml(kml, filepath):
+def save_kml(kml: KML.kml, filepath: str):
     """Save a KML object to a file
 
     Parameters
     ----------
-    kml : pykml.KML
+    kml : KML.kml
         The object to save
     filepath : str
         Path to save the file
