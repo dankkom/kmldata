@@ -266,7 +266,7 @@ def make_styles(
     """
     styles = []
     for name in data[icon_color_col].unique():
-        icon_color = random_color()
+        icon_color = random_color(seed=hash(name))
         style = make_style(
             style_name=icon_color_col + "_" + str(name),
             icon_shape=icon_shape,
