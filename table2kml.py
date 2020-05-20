@@ -5,6 +5,9 @@ Group the placemarks by folders, color & shapes based on values in the table
 """
 
 
+# pylint: disable=invalid-name
+
+
 import json
 import random
 from typing import Any, List
@@ -14,19 +17,16 @@ from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
 
 
-with open("icons.json", "r") as f:
-    ICON_SHAPES = json.load(f)
-
-
 class Options:
     """An object to store options passed to the functions in this module
 
     Required parameters
     -------------------
     lat, lon : float
-        The column names of a Pandas DataFrame coordinates (latitude, longitude) 
+        The column names of a Pandas DataFrame coordinates (latitude, longitude)
     """
     def __init__(self, lat, lon, **kwargs):
+        self.ICON_SHAPES = self.load_icon_shapes()
         self.lat = lat
         self.lon = lon
         # List of column names that will be added in point's description
@@ -39,9 +39,21 @@ class Options:
         self.color = None
         # Altitude of points (relative to ground) by value in column `height_col`
         self.altitude = None
-        self.shape = ICON_SHAPES["donut"]
+        self.shape = self.ICON_SHAPES["donut"]
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
+
+    @staticmethod
+    def load_icon_shapes():
+        """Loads a dict of shape names and its URLs
+
+        Returns
+        -------
+        dict
+            Google's shapes at the Internet
+        """
+        with open("icons.json", "r") as f:
+            return json.load(f)
 
 
 def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
