@@ -45,7 +45,7 @@ class Options:
 
     @staticmethod
     def load_icon_shapes():
-        """Loads a dict of shape names and its URLs
+        """Load a dict of shape names and its URLs
 
         Returns
         -------
