@@ -9,13 +9,13 @@ Group the placemarks by folders, color & shapes based on values in the table
 
 
 import json
-from pkg_resources import resource_filename
 import random
 from typing import Any, List
 
 import pandas as pd
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
+from pkg_resources import resource_filename
 
 
 class Options:
