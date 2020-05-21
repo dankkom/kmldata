@@ -9,6 +9,7 @@ Group the placemarks by folders, color & shapes based on values in the table
 
 
 import json
+from pkg_resources import resource_filename
 import random
 from typing import Any, List
 
@@ -52,7 +53,11 @@ class Options:
         dict
             Google's shapes at the Internet
         """
-        with open("icons.json", "r") as f:
+        path = resource_filename(
+            "table2kml",
+            "icons.json"
+        )
+        with open(path, "r") as f:
             return json.load(f)
 
 
