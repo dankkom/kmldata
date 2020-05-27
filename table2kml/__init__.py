@@ -18,6 +18,11 @@ from pykml.factory import KML_ElementMaker as KML
 from pkg_resources import resource_filename
 
 
+__author__ = "Daniel K. Komesu"
+__author_email__ = "danielkomesu@gmail.com"
+__version__ = "0.1.0"
+
+
 class Options:
     """An object to store options passed to the functions in this module
 
@@ -27,7 +32,7 @@ class Options:
         The column names of a Pandas DataFrame coordinates (latitude, longitude)
     """
     def __init__(self, lat, lon, **kwargs):
-        self.ICON_SHAPES = self.load_icon_shapes()
+        self.ICON_SHAPES = load_icon_shapes()
         self.lat = lat
         self.lon = lon
         # List of column names that will be added in point's description
@@ -44,21 +49,21 @@ class Options:
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
 
-    @staticmethod
-    def load_icon_shapes():
-        """Load a dict of shape names and its URLs
 
-        Returns
-        -------
-        dict
-            Google's shapes at the Internet
-        """
-        path = resource_filename(
-            "table2kml",
-            "icons.json"
-        )
-        with open(path, "r") as f:
-            return json.load(f)
+def load_icon_shapes():
+    """Load a dict of shape names and its URLs
+
+    Returns
+    -------
+    dict
+        Google's shapes at the Internet
+    """
+    path = resource_filename(
+        "table2kml",
+        "icons.json"
+    )
+    with open(path, "r") as f:
+        return json.load(f)
 
 
 def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
