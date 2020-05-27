@@ -8,14 +8,14 @@ Group the placemarks by folders, color & shapes based on values in the table
 # pylint: disable=invalid-name
 
 
-import json
-import random
 from typing import Any, List
 
 import pandas as pd
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
-from pkg_resources import resource_filename
+
+from table2kml import styling
+from table2kml.helper import load_icon_shapes
 
 
 __author__ = "Daniel K. Komesu"
@@ -33,6 +33,7 @@ class Options:
     """
     def __init__(self, lat, lon, **kwargs):
         self.ICON_SHAPES = load_icon_shapes()
+        self.style = styling.StyleOptions()
         self.lat = lat
         self.lon = lon
         # List of column names that will be added in point's description
@@ -47,23 +48,11 @@ class Options:
         self.altitude = None
         self.shape = self.ICON_SHAPES["donut"]
         for key in kwargs:
-            self.__setattr__(key, kwargs[key])
-
-
-def load_icon_shapes():
-    """Load a dict of shape names and its URLs
-
-    Returns
-    -------
-    dict
-        Google's shapes at the Internet
-    """
-    path = resource_filename(
-        "table2kml",
-        "icons.json"
-    )
-    with open(path, "r") as f:
-        return json.load(f)
+            if key == "style":
+                for style_key in kwargs[key]:
+                    self.style.__setattr__(style_key, kwargs[key][style_key])
+            else:
+                self.__setattr__(key, kwargs[key])
 
 
 def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
@@ -113,8 +102,8 @@ def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
     point.append(alt_mode)
     placemark.append(point)
     # Style
-    if opt.color is not None:
-        style_url = "#" + opt.color + "_" + str(row[opt.color])
+    if opt.style.icon_color is not None:
+        style_url = "#color_" + str(row["ColorDigit"])
         placemark.append(KML.styleUrl(style_url))
     description = make_description(row, opt.data_cols)
     placemark.append(description)
@@ -194,111 +183,6 @@ def make_tree(
     return parent
 
 
-def make_style(
-        style_name: str,
-        icon_shape: str,
-        icon_color: str,
-        label_color: str
-    ) -> KML.Style:
-    """Create a KML style object with the given parameters
-
-    Parameters
-    ----------
-    style_name : str
-        The name of style
-    icon_shape : str
-        URL of the image to use as icon
-    icon_color : str
-        Hex color code for the icon
-    label_color : str
-        Hex color code for the label
-
-    Returns
-    -------
-    KML.Style
-        The style with the specified settings
-    """
-    style = KML.Style()
-
-    icon_style = KML.IconStyle(
-        KML.scale(1),
-        KML.Icon(
-            KML.href(icon_shape)
-        ),
-        KML.color(icon_color)
-    )
-    label_style = KML.LabelStyle(
-        KML.color(label_color)
-    )
-
-    style.append(icon_style)
-    style.append(label_style)
-
-    style.set("id", str(style_name))
-
-    return style
-
-
-def random_color(seed: int = 0) -> str:
-    """Generate a random color value for a KML style
-
-    Parameters
-    ----------
-    seed : int
-        The seed to random generator for reproducible code
-
-    Returns
-    -------
-    str
-        Random color string value
-    """
-    random.seed(seed)
-    r = hex(random.randint(0, 255))[2:]
-    random.seed(seed+1)
-    g = hex(random.randint(0, 255))[2:]
-    random.seed(seed+2)
-    b = hex(random.randint(0, 255))[2:]
-    a = "ff"
-    return "".join((a, b, g, r)).upper()
-
-
-def make_styles(
-        data: pd.core.frame.DataFrame,
-        icon_color_col: str,
-        icon_shape: str,
-        label_color: str = "FFFFFFFF"
-    ) -> List[KML.Style]:
-    """Create a list of styles accordingly the data and parameters
-
-    Parameters
-    ----------
-    data : pd.core.frame.DataFrame
-        The Pandas DataFrame to use as input for the styles
-    icon_color_col : str
-        The column name of `data` to use as input of color in styles
-    icon_shape : str
-        The column name of `data` to use as input of icon shape in styles
-    label_color : str, optional
-        The color of placemarks' labels, by default "FFFFFFFF"
-
-    Returns
-    -------
-    list
-        A list of styles to append to a KML document
-    """
-    styles = []
-    for name in data[icon_color_col].unique():
-        icon_color = random_color(seed=hash(name))
-        style = make_style(
-            style_name=icon_color_col + "_" + str(name),
-            icon_shape=icon_shape,
-            icon_color=icon_color,
-            label_color=label_color,
-        )
-        styles.append(style)
-    return styles
-
-
 def make_kml(
         data: pd.core.frame.DataFrame,
         opt: Options,
@@ -324,8 +208,16 @@ def make_kml(
     doc = KML.Document(KML.name(doc_name))
     kml.append(doc)
 
-    if opt.color is not None:
-        styles = make_styles(data, opt.color, icon_shape=opt.shape)
+    if opt.style is not None:
+        data = styling.add_color_digit_column(
+            df=data,
+            column_name=opt.style.icon_color,
+            n_colors=opt.style.icon_n_colors,
+        )
+        styles = styling.make_styles(
+            data=data,
+            opts=opt.style,
+        )
         for style in styles:
             doc.append(style)
 
