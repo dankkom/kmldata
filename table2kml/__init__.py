@@ -54,6 +54,20 @@ class Options:
             else:
                 self.__setattr__(key, kwargs[key])
 
+    def json(self):
+        j = {
+            k: v for k, v in self.__dict__.items()
+            if not k.startswith("_") and not k.isupper() and isinstance(k, str)
+        }
+        j.update({"style": self.style.json()})
+        return j
+
+    def __str__(self):
+        return "{} object".format(self.__class__.__name__)
+
+    def __repr__(self):
+        return "{} object".format(self.__class__.__name__)
+
 
 def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
     """Create a description KML object with the data in row[data_cols]

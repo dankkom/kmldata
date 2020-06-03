@@ -34,7 +34,20 @@ class StyleOptions:
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
 
+    def json(self):
+        j = {
+            k: v for k, v in self.__dict__.items()
+            if not k.startswith("_") and not k.isupper() and isinstance(k, str)
+        }
+        return j
 
+    def __str__(self):
+        return "{} object".format(self.__class__.__name__)
+
+    def __repr__(self):
+        return "{} object".format(self.__class__.__name__)
+
+        
 def make_style(
         style_name: str,
         icon_shape: str,
