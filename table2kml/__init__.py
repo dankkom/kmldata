@@ -32,21 +32,21 @@ class Options:
         The column names of a Pandas DataFrame coordinates (latitude, longitude)
     """
     def __init__(self, lat, lon, **kwargs):
-        self.ICON_SHAPES = load_icon_shapes()
         self.style = styling.StyleOptions()
         self.lat = lat
         self.lon = lon
         # List of column names that will be added in point's description
         self.data_cols = []
-        # Point names by value in column `name_col`
+        # Point names by value in column
         self.name = None
-        # Separate points in folders by values in column `folder_col`
+        # Separate points in folders by values in column
         self.folders = []
-        # Color points by value in column `color_col`
+        # Color points by value in column
         self.color = None
-        # Altitude of points (relative to ground) by value in column `height_col`
+        # Altitude of points (relative to ground) by value in column
         self.altitude = None
-        self.shape = self.ICON_SHAPES["donut"]
+        # Create separate KML files for different values in a column
+        self.files = None
         for key in kwargs:
             if key == "style":
                 for style_key in kwargs[key]:
