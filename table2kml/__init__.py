@@ -222,7 +222,7 @@ def make_kml(
     doc = KML.Document(KML.name(doc_name))
     kml.append(doc)
 
-    if opt.style is not None:
+    if opt.style.icon_color is not None:
         data = styling.add_color_digit_column(
             df=data,
             column_name=opt.style.icon_color,
