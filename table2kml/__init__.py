@@ -124,77 +124,20 @@ def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
     return placemark
 
 
-def make_folder(
-        data: pd.core.frame.DataFrame,
-        name: str, opt: Options
-    ) -> KML.Folder:
-    """Create a folder with the data provided
-
-    Parameters
-    ----------
-    data : pd.core.frame.DataFrame
-        The data used to create the placemarks
-    name : str
-        The name of the folder created
-    opt : Options
-        Options to create the placemarks
-
-    Returns
-    -------
-    KML.Folder
-        Resulting KML folder with placemarks
-    """
+def get_folder(element: ObjectifiedElement, folder_path: list) -> ObjectifiedElement:
+    name = folder_path[0]
+    folder_name = element.xpath(
+        f"./t:Folder/*[text()='{name}']",
+        namespaces={"t": "http://www.opengis.net/kml/2.2"},
+    )
+    if len(folder_name) == 0:
     folder = KML.Folder(KML.name(name))
-    for i in range(data.shape[0]):
-        row = data.iloc[i]
-        placemark = make_placemark(row, opt)
-        folder.append(placemark)
+        element.append(folder)
+    else:
+        folder = folder_name[0].getparent()
+    if len(folder_path) > 1:
+        folder = get_folder(folder, folder_path[1:])
     return folder
-
-
-def make_tree(
-        parent: Any,
-        data: pd.core.frame.DataFrame,
-        folders: List[str],
-        opt: Options
-    ) -> Any:
-    """Create a tree of folders
-
-    Parameters
-    ----------
-    parent : KML object
-        The parent object to append to
-    data : pd.core.frame.DataFrame
-        The data with the columns to be used to build the tree
-    folders : list
-        List of columns names in data
-    opt : Options
-        The options for this function
-
-    Returns
-    -------
-    parent
-        The parent object with the tree appended to it
-    """
-    # pylint: disable=invalid-name
-    for l0 in data[folders[0]].unique():
-        data0 = data[data[folders[0]] == l0]
-        if len(folders) > 1:
-            f0 = KML.Folder(KML.name(folders[0] + ": " + str(l0)))
-            f0 = make_tree(
-                parent=f0,
-                data=data0,
-                folders=folders[1:],
-                opt=opt,
-            )
-        else:
-            f0 = make_folder(
-                data=data0,
-                name=folders[0] + ": " + str(l0),
-                opt=opt,
-            )
-        parent.append(f0)
-    return parent
 
 
 def make_kml(
@@ -235,18 +178,13 @@ def make_kml(
         for style in styles:
             doc.append(style)
 
-    if opt.folders is not None:
-        doc = make_tree(
-            parent=doc,
-            data=data,
-            folders=opt.folders,
-            opt=opt,
-        )
-        return kml
-
     for i in range(data.shape[0]):
         row = data.iloc[i]
         placemark = make_placemark(row, opt)
+        if opt.folders:
+            folder = get_folder(doc, row[opt.folders])
+            folder.append(placemark)
+        else:
         doc.append(placemark)
     return kml
 
