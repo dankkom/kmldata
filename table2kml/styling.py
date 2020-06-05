@@ -10,12 +10,12 @@ from table2kml.helper import get_digits, load_icon_shapes, normalize
 
 
 _STR_FMT = {
-    "reds": "FFFFFF{0}",
-    "greens": "FFFF{0}FF",
-    "blues": "FF{0}FFFF",
-    "yellows": "FFFF{0}{0}",
-    "magentas": "FF{0}FF{0}",
-    "cyans": "FF{0}{0}FF",
+    "reds": "FFFFFF{0:X}",
+    "greens": "FFFF{0:X}FF",
+    "blues": "FF{0:X}FFFF",
+    "yellows": "FFFF{0:X}{0:X}",
+    "magentas": "FF{0:X}FF{0:X}",
+    "cyans": "FF{0:X}{0:X}FF",
 }
 
 
@@ -174,10 +174,6 @@ def get_color_value(digit: int, n: int, inverse: bool = False) -> int:
     return value
 
 
-def get_hex(value: int) -> str:
-    return hex(value)[2:].upper()
-
-
 def get_color_hue_hex(
         fmt_name: str,
         digit: int,
@@ -185,7 +181,7 @@ def get_color_hue_hex(
         inverse: bool = False,
     ) -> str:
     return get_string_format(fmt_name).format(
-        get_hex(get_color_value(digit, n, inverse=inverse))
+        get_color_value(digit, n, inverse=inverse)
     )
 
 
