@@ -110,13 +110,13 @@ def make_placemark(row: pd.core.series.Series, opt: Options) -> ObjectifiedEleme
     if opt.name:
         placemark.append(KML.name(row[opt.name]))
     # Point
-    altitude = row[opt.altitude] if opt.altitude is not None else 0
+    altitude = row[opt.altitude] if opt.altitude else 0
     point = KML.Point(KML.coordinates(f"{lon},{lat},{altitude}"))
     alt_mode = KML.altitudeMode("relativeToGround")
     point.append(alt_mode)
     placemark.append(point)
     # Style
-    if opt.style.icon_color is not None:
+    if opt.style.icon_color:
         style_url = "#color_" + str(row["ColorDigit"])
         placemark.append(KML.styleUrl(style_url))
     description = make_description(row, opt.data_cols)
