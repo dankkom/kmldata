@@ -13,7 +13,7 @@ from typing import Any, List
 import pandas as pd
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
-
+from lxml.objectify import ObjectifiedElement
 from table2kml import styling
 from table2kml.helper import load_icon_shapes
 
@@ -69,7 +69,7 @@ class Options:
         return "{} object".format(self.__class__.__name__)
 
 
-def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
+def make_description(row: pd.core.series.Series, data_cols) -> ObjectifiedElement:
     """Create a description KML object with the data in row[data_cols]
 
     Parameters
@@ -90,7 +90,7 @@ def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
     return description
 
 
-def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
+def make_placemark(row: pd.core.series.Series, opt: Options) -> ObjectifiedElement:
     """Create a placemark KML object with data in `row` and configuration in opt
 
     Parameters
@@ -144,7 +144,7 @@ def make_kml(
         data: pd.core.frame.DataFrame,
         opt: Options,
         doc_name: str = "Default"
-    ) -> KML.kml:
+    ) -> ObjectifiedElement:
     """Create a KML object with data and opt configuration
 
     Parameters
@@ -189,7 +189,7 @@ def make_kml(
     return kml
 
 
-def save_kml(kml: KML.kml, filepath: str):
+def save_kml(kml: ObjectifiedElement, filepath: str):
     """Save a KML object to a file
 
     Parameters
