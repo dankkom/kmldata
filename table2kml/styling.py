@@ -4,6 +4,7 @@ from typing import List
 import pandas as pd
 import numpy as np
 from pykml.factory import KML_ElementMaker as KML
+from lxml.objectify import ObjectifiedElement
 
 from table2kml.helper import get_digits, load_icon_shapes, normalize
 
@@ -47,13 +48,13 @@ class StyleOptions:
     def __repr__(self):
         return "{} object".format(self.__class__.__name__)
 
-        
+
 def make_style(
         style_name: str,
         icon_shape: str,
         icon_color: str,
         label_color: str
-    ) -> KML.Style:
+    ) -> ObjectifiedElement:
     """Create a KML style object with the given parameters
 
     Parameters
@@ -119,7 +120,7 @@ def random_color(seed: int = 0) -> str:
 def make_styles(
         data: pd.core.frame.DataFrame,
         opts: StyleOptions,
-    ) -> List[KML.Style]:
+    ) -> List[ObjectifiedElement]:
     """Create a list of styles accordingly the data and StyleOptions.
 
     data is expected to have a ColorDigit column, added by
