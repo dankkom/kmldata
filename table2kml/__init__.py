@@ -201,4 +201,5 @@ def save_kml(kml: KML.kml, filepath: str):
     """
     # pylint: disable=c-extension-no-member
     with open(filepath, "wb") as f:
+        f.write(b"""<?xml version="1.0" encoding="UTF-8"?>\n""")
         f.write(etree.tostring(kml, pretty_print=True))
