@@ -5,7 +5,7 @@ import pandas as pd
 from pykml.factory import KML_ElementMaker as KML
 
 from table2kml.helper import get_digits, load_icon_shapes, normalize
-from table2kml.color import get_color_interpolation
+from table2kml import color
 
 
 class StyleOptions:
@@ -106,13 +106,11 @@ def make_styles(
     """
     styles = []
 
-    icon_color_interpolation = get_color_interpolation(
+    icon_color_interpolation = color.get_interpolation(
         palette_name=opts.icon_color_palette,
-        n=opts.icon_n_colors,
     )
-    label_color_interpolation = get_color_interpolation(
+    label_color_interpolation = color.get_interpolation(
         palette_name=opts.label_color_palette,
-        n=opts.label_n_colors,
     )
 
     it = data[
@@ -128,14 +126,20 @@ def make_styles(
 
         icon_color = str(
             icon_color_interpolation.get_point(
-                n=icon_digit-1,
-                inverse=opts.icon_inverse_colors
+                n=color.get_value(
+                    icon_digit-1,
+                    opts.icon_n_colors,
+                    inverse=opts.icon_inverse_colors,
+                ),
             )
         )
         label_color = str(
             label_color_interpolation.get_point(
-                n=label_digit-1,
-                inverse=opts.label_inverse_colors
+                n=color.get_value(
+                    label_digit-1,
+                    opts.label_n_colors,
+                    inverse=opts.label_inverse_colors,
+                ),
             )
         )
 

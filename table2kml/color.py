@@ -7,9 +7,17 @@ import numpy as np
 
 
 PALETTE = {
-    "reds":   ((1, 1, 1), (1, 0, 0)),
+    "reds": ((1, 1, 1), (1, 0, 0)),
+    "yellows": ((1, 1, 1), (1, 1, 0)),
     "greens": ((1, 1, 1), (0, 1, 0)),
-    "blues":  ((1, 1, 1), (0, 0, 1)),
+    "cyans": ((1, 1, 1), (0, 1, 1)),
+    "blues": ((1, 1, 1), (0, 0, 1)),
+    "magentas": ((1, 1, 1), (1, 0, 1)),
+    "viridis": (
+        (70/255, 0, 85/255),
+        (35/255, 140/255, 140/255),
+        (1, 230/255, 25/255)
+    ),
 }
 
 
@@ -38,33 +46,28 @@ class RGB:
 
 class ColorInterpolation:
 
-    def __init__(self, color_start: RGB, color_end: RGB, n: int = 5):
-        self.set_lim(color_start, color_end, n=n)
-        self.set_linspace()
+    def __init__(self, *colors: RGB):
+        self.colors = colors
+        self.set_colorspace(*colors)
 
-    def set_lim(self, color_start: RGB, color_end: RGB, n=5):
-        self.rlim = (color_start.r, color_end.r)
-        self.glim = (color_start.g, color_end.g)
-        self.blim = (color_start.b, color_end.b)
-        self.n = n
+    def set_colorspace(self, *colors):
+        self.r_space = list(c.r for c in colors)
+        self.g_space = list(c.g for c in colors)
+        self.b_space = list(c.b for c in colors)
 
-    def set_linspace(self):
-        self.r = np.linspace(self.rlim[0], self.rlim[1], self.n)
-        self.g = np.linspace(self.glim[0], self.glim[1], self.n)
-        self.b = np.linspace(self.blim[0], self.blim[1], self.n)
-
-    def get_point(self, n, inverse=False):
-        if inverse:
-            n = self.n - (n + 1)
-        r = self.r[n]
-        g = self.g[n]
-        b = self.b[n]
+    def get_point(self, n: float):
+        r = interpolate(self.r_space, n)
+        g = interpolate(self.g_space, n)
+        b = interpolate(self.b_space, n)
         return RGB(r=r, g=g, b=b)
 
     def __getitem__(self, key):
         if key < 0 or key > self.n:
             raise IndexError()
         return self.get_point(key)
+
+    def __str__(self):
+        return f"ColorInterpolation[{' '.join([str(c) for c in self.colors])}]"
 
 
 def random_color(seed: int = 0) -> str:
@@ -90,22 +93,18 @@ def random_color(seed: int = 0) -> str:
     return "".join((a, b, g, r)).upper()
 
 
-def get_color_value(digit: int, n: int, inverse: bool = False) -> int:
+def get_value(digit: int, n: int, inverse: bool = False) -> int:
     v = digit / n
     if inverse:
         v = 1 - v
-    value = int(v * 255)
-    return value
+    return v
 
 
-def get_color_interpolation(
-        palette_name: str,
-        n: int = 5,
-) -> ColorInterpolation:
-    color_start = RGB(*PALETTE.get(palette_name)[0])
-    color_end = RGB(*PALETTE.get(palette_name)[1])
-    return ColorInterpolation(
-        color_start=color_start,
-        color_end=color_end,
-        n=n,
-    )
+def get_interpolation(palette_name: str) -> ColorInterpolation:
+    colors = [RGB(*c) for c in PALETTE.get(palette_name)]
+    return ColorInterpolation(*colors)
+
+
+def interpolate(colorspace, n):
+    x = np.linspace(0, 1, len(colorspace))
+    return np.interp(x=[n], xp=x, fp=colorspace)[0]
