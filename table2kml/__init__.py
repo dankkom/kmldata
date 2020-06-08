@@ -8,14 +8,10 @@ Group the placemarks by folders, color & shapes based on values in the table
 # pylint: disable=invalid-name
 
 
-from typing import Any, List
-
 import pandas as pd
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
-from lxml.objectify import ObjectifiedElement
 from table2kml import styling
-from table2kml.helper import load_icon_shapes
 
 
 __author__ = "Daniel K. Komesu"
@@ -31,6 +27,7 @@ class Options:
     lat, lon : float
         The column names of a Pandas DataFrame coordinates (latitude, longitude)
     """
+
     def __init__(self, lat, lon, **kwargs):
         self.style = styling.StyleOptions()
         self.lat = lat
@@ -41,8 +38,6 @@ class Options:
         self.name = None
         # Separate points in folders by values in column
         self.folders = []
-        # Color points by value in column
-        self.color = None
         # Altitude of points (relative to ground) by value in column
         self.altitude = None
         # Create separate KML files for different values in a column
@@ -69,7 +64,7 @@ class Options:
         return "{} object".format(self.__class__.__name__)
 
 
-def make_description(row: pd.core.series.Series, data_cols) -> ObjectifiedElement:
+def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
     """Create a description KML object with the data in row[data_cols]
 
     Parameters
@@ -90,7 +85,7 @@ def make_description(row: pd.core.series.Series, data_cols) -> ObjectifiedElemen
     return description
 
 
-def make_placemark(row: pd.core.series.Series, opt: Options) -> ObjectifiedElement:
+def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
     """Create a placemark KML object with data in `row` and configuration in opt
 
     Parameters
@@ -116,22 +111,21 @@ def make_placemark(row: pd.core.series.Series, opt: Options) -> ObjectifiedEleme
     point.append(alt_mode)
     placemark.append(point)
     # Style
-    if opt.style.icon_color:
-        style_url = "#color_" + str(row["ColorDigit"])
-        placemark.append(KML.styleUrl(style_url))
+    style_url = styling.get_style_url_from_row(row)
+    placemark.append(KML.styleUrl(style_url))
     description = make_description(row, opt.data_cols)
     placemark.append(description)
     return placemark
 
 
-def get_folder(element: ObjectifiedElement, folder_path: list) -> ObjectifiedElement:
+def get_folder(element: KML.Folder, folder_path: list) -> KML.Folder:
     name = folder_path[0]
     folder_name = element.xpath(
         f"./t:Folder/*[text()='{name}']",
         namespaces={"t": "http://www.opengis.net/kml/2.2"},
     )
     if len(folder_name) == 0:
-    folder = KML.Folder(KML.name(name))
+        folder = KML.Folder(KML.name(name))
         element.append(folder)
     else:
         folder = folder_name[0].getparent()
@@ -140,11 +134,8 @@ def get_folder(element: ObjectifiedElement, folder_path: list) -> ObjectifiedEle
     return folder
 
 
-def make_kml(
-        data: pd.core.frame.DataFrame,
-        opt: Options,
-        doc_name: str = "Default"
-    ) -> ObjectifiedElement:
+def make_kml(data: pd.core.frame.DataFrame, opt: Options,
+             doc_name: str = "Default") -> KML.kml:
     """Create a KML object with data and opt configuration
 
     Parameters
@@ -165,18 +156,10 @@ def make_kml(
     doc = KML.Document(KML.name(doc_name))
     kml.append(doc)
 
-    if opt.style.icon_color is not None:
-        data = styling.add_color_digit_column(
-            df=data,
-            column_name=opt.style.icon_color,
-            n_colors=opt.style.icon_n_colors,
-        )
-        styles = styling.make_styles(
-            data=data,
-            opts=opt.style,
-        )
-        for style in styles:
-            doc.append(style)
+    data = styling.add_color_digit_column(df=data, opts=opt.style)
+    styles = styling.make_styles(data=data, opts=opt.style)
+    for style in styles:
+        doc.append(style)
 
     for i in range(data.shape[0]):
         row = data.iloc[i]
@@ -185,11 +168,11 @@ def make_kml(
             folder = get_folder(doc, row[opt.folders])
             folder.append(placemark)
         else:
-        doc.append(placemark)
+            doc.append(placemark)
     return kml
 
 
-def save_kml(kml: ObjectifiedElement, filepath: str):
+def save_kml(kml: KML.kml, filepath: str):
     """Save a KML object to a file
 
     Parameters
