@@ -17,3 +17,11 @@ dist
 # Jupyter
 *.ipynb
 .ipynb_checkpoints
+
+# Images
+*.png
+*.jpg
+*.svg
+
+# Sublime Text
+*.sublime-*
