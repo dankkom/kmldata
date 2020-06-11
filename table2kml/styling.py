@@ -1,46 +1,49 @@
-import random
+
 from typing import List
 
 import pandas as pd
-import numpy as np
 from pykml.factory import KML_ElementMaker as KML
 
 from table2kml.helper import get_digits, load_icon_shapes, normalize
-
-
-_STR_FMT = {
-    "reds": "FFFFFF{0}",
-    "greens": "FFFF{0}FF",
-    "blues": "FF{0}FFFF",
-    "yellows": "FFFF{0}{0}",
-    "magentas": "FF{0}FF{0}",
-    "cyans": "FF{0}{0}FF",
-}
+from table2kml import color
 
 
 class StyleOptions:
 
     def __init__(self, **kwargs):
         self.ICON_SHAPES = load_icon_shapes()
-        self.icon_fmt_name = None
-        self.label_fmt_name = None
+        self.icon_color_palette = None
         self.icon_color = None
-        self.label_color = None
-        self.icon_n_colors = None
-        self.label_n_colors = None
+        self.icon_n_colors = 1
         self.icon_inverse_colors = False
-        self.label_inverse_colors = False
         self.icon_shape = self.ICON_SHAPES["donut"]
+        self.label_color_palette = None
+        self.label_color = None
+        self.label_n_colors = 1
+        self.label_inverse_colors = False
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
+
+    def json(self):
+        j = {
+            k: v for k, v in self.__dict__.items()
+            if not k.startswith("_") and not k.isupper() and isinstance(k, str)
+        }
+        return j
+
+    def __str__(self):
+        return "{} object".format(self.__class__.__name__)
+
+    def __repr__(self):
+        return "{} object".format(self.__class__.__name__)
 
 
 def make_style(
         style_name: str,
         icon_shape: str,
         icon_color: str,
-        label_color: str
-    ) -> KML.Style:
+        label_color: str,
+) -> KML.Style:
     """Create a KML style object with the given parameters
 
     Parameters
@@ -80,33 +83,10 @@ def make_style(
     return style
 
 
-def random_color(seed: int = 0) -> str:
-    """Generate a random color value for a KML style
-
-    Parameters
-    ----------
-    seed : int
-        The seed to random generator for reproducible code
-
-    Returns
-    -------
-    str
-        Random color string value
-    """
-    random.seed(seed)
-    r = hex(random.randint(0, 255))[2:]
-    random.seed(seed+1)
-    g = hex(random.randint(0, 255))[2:]
-    random.seed(seed+2)
-    b = hex(random.randint(0, 255))[2:]
-    a = "ff"
-    return "".join((a, b, g, r)).upper()
-
-
 def make_styles(
         data: pd.core.frame.DataFrame,
         opts: StyleOptions,
-    ) -> List[KML.Style]:
+) -> List[KML.Style]:
     """Create a list of styles accordingly the data and StyleOptions.
 
     data is expected to have a ColorDigit column, added by
@@ -125,55 +105,76 @@ def make_styles(
         A list of styles to append to a KML document
     """
     styles = []
-    for digit in data["ColorDigit"].unique():
-        icon_color = get_color_hue_hex(
-            fmt_name=opts.icon_fmt_name,
-            digit=digit,
-            n=opts.icon_n_colors,
-            inverse=opts.icon_inverse_colors,
+
+    icon_color_interpolation = color.get_interpolation(
+        palette_name=opts.icon_color_palette,
+    )
+    label_color_interpolation = color.get_interpolation(
+        palette_name=opts.label_color_palette,
+    )
+
+    it = data[
+        [
+            "IconColorDigit",
+            "LabelColorDigit",
+        ]
+    ].drop_duplicates().itertuples()
+
+    for row in it:
+        icon_digit = row[1]
+        label_digit = row[2]
+
+        icon_color = str(
+            icon_color_interpolation.get_point(
+                n=color.get_value(
+                    icon_digit-1,
+                    opts.icon_n_colors,
+                    inverse=opts.icon_inverse_colors,
+                ),
+            )
         )
+        label_color = str(
+            label_color_interpolation.get_point(
+                n=color.get_value(
+                    label_digit-1,
+                    opts.label_n_colors,
+                    inverse=opts.label_inverse_colors,
+                ),
+            )
+        )
+
         style = make_style(
-            style_name= "color_" + str(digit),
+            style_name=get_style_name_from_digits(icon_digit, label_digit),
             icon_shape=opts.icon_shape,
             icon_color=icon_color,
-            label_color=opts.label_color,
+            label_color=label_color,
         )
         styles.append(style)
+
     return styles
 
 
 def add_color_digit_column(
         df: pd.DataFrame,
-        column_name: str,
-        n_colors: int,
-    ) -> pd.DataFrame:
-    normal_values = normalize(df[column_name])
-    digits = get_digits(normal_values, n=n_colors)
-    return df.assign(ColorDigit=digits)
+        opts: StyleOptions,
+) -> pd.DataFrame:
+    """Add columns for icon and label digit colors."""
+    if opts.icon_color:
+        normal_values = normalize(df[opts.icon_color])
+        icon_digits = get_digits(normal_values, n=opts.icon_n_colors)
+    else:
+        icon_digits = 1
+    if opts.label_color:
+        normal_values = normalize(df[opts.label_color])
+        label_digits = get_digits(normal_values, n=opts.label_n_colors)
+    else:
+        label_digits = 1
+    return df.assign(IconColorDigit=icon_digits, LabelColorDigit=label_digits)
 
 
-def get_color_value(digit: int, n: int, inverse: bool = False) -> int:
-    v = digit / n
-    if inverse:
-        v = 1 - v
-    value = int(v * 255)
-    return value
+def get_style_url_from_row(row):
+    return f"#color_{row['IconColorDigit']-1}-{row['LabelColorDigit']-1}"
 
 
-def get_hex(value: int) -> str:
-    return hex(value)[2:].upper()
-
-
-def get_color_hue_hex(
-        fmt_name: str,
-        digit: int,
-        n: int,
-        inverse: bool = False,
-    ) -> str:
-    return get_string_format(fmt_name).format(
-        get_hex(get_color_value(digit, n, inverse=inverse))
-    )
-
-
-def get_string_format(fmt_name: str) -> str:
-    return _STR_FMT[fmt_name]
+def get_style_name_from_digits(icon_digit, label_digit):
+    return f"color_{icon_digit-1}-{label_digit-1}"
