@@ -259,7 +259,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
 def get_icon_pixmap(name):
     """Get icon shape image"""
-    path = resource_filename("table2kml", f"../icons/{name}.png")
+    path = resource_filename("table2kml.ui", f"icons/{name}.png")
     with open(path, "rb") as f:
         data = f.read()
     pixmap = QPixmap()

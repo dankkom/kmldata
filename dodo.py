@@ -1,4 +1,7 @@
 import os
+import urllib.request
+
+from table2kml.helper import load_icon_shapes
 
 
 def task_compile_ui_files():
@@ -47,3 +50,24 @@ def task_correct_imports():
         "file_dep": files,
         "actions": [(correct_imports, [file]) for file in files]
     }
+
+
+def download_icon(url, name, icon_dir_path):
+    if not os.path.exists(icon_dir_path):
+        os.makedirs(icon_dir_path)
+    data = urllib.request.urlopen(url).read()
+    path = os.path.join(icon_dir_path, "{}.png".format(name))
+    with open(path, "wb") as f:
+        f.write(data)
+
+
+def task_download_icons():
+    icon_dir_path = os.path.join("table2kml", "ui", "icons")
+    icon_shapes = load_icon_shapes()
+    for name in icon_shapes:
+        url = icon_shapes.get(name)
+        yield {
+            "name": name,
+            "targets": [os.path.join(icon_dir_path, f"{name}.png")],
+            "actions": [(download_icon, (url, name, icon_dir_path))]
+        }

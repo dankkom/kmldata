@@ -26,7 +26,7 @@ setuptools.setup(
     python_requires=">=3.8, <4",
     package_data={
         "table2kml": ["icons.json"],
-        "": ["*.png"],
+        "table2kml.ui": ["*.png"],
     },
     include_package_data=True,
     entry_points={
