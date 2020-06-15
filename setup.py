@@ -14,7 +14,7 @@ setuptools.setup(
     name="table2kml",
     author=table2kml.__author__,
     author_email=table2kml.__author_email__,
-    description="Transform a data tables into KML",
+    description="Transform data tables into KML",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="GNU LGPLv3",
@@ -26,6 +26,7 @@ setuptools.setup(
     python_requires=">=3.8, <4",
     package_data={
         "table2kml": ["icons.json"],
+        "": ["*.png"],
     },
     include_package_data=True,
     entry_points={

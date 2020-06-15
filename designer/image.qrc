@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="images">
+    <file>images/credits.png</file>
+    <file>images/xltokml-logo.png</file>
+  </qresource>
+</RCC>
