@@ -35,6 +35,7 @@ class TestTable2KMLIntegration(unittest.TestCase):
             data_cols=["values0", "values1"],
             folders=["Folder1", "Folder2", "Folder3"],
             name="name",
+            files="Files",
             style={
                 "icon_color": "Color",
                 "icon_color_palette": "blues",
@@ -62,6 +63,13 @@ class TestTable2KMLIntegration(unittest.TestCase):
             data=self.data_sample,
             opt=self.opts,
         )
+
+    def test_make_kmls(self):
+        kmls_dict = table2kml.make_kmls(
+            data=self.data_sample,
+            opt=self.opts,
+        )
+        self.assertIsInstance(kmls_dict, dict)
 
 
 if __name__ == "__main__":

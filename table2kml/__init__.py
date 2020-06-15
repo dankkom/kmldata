@@ -172,6 +172,33 @@ def make_kml(data: pd.core.frame.DataFrame, opt: Options,
     return kml
 
 
+def make_kmls(data: pd.core.frame.DataFrame, opt: Options) -> dict:
+    """Create multiple KML with the column name given in opt
+
+    Parameters
+    ----------
+    data : pd.core.frame.DataFrame
+        A Pandas DataFrame with the data to use as input
+    opt : Options
+        An Options instance with the configuration to output the KML
+
+    Returns
+    -------
+    dict
+        A dict qith the resulting KMLs objects, with columns' values as keys
+    """
+    kml_dict = {}
+    if opt.files:
+        for i in data[opt.files].unique():
+            dd = data.loc[data[opt.files] == i]
+            kml = make_kml(dd, opt, doc_name=i)
+            kml_dict[i] = kml
+    else:
+        kml = make_kml(data, opt)
+        kml_dict["Default"] = kml
+    return kml_dict
+
+
 def save_kml(kml: KML.kml, filepath: str):
     """Save a KML object to a file
 
