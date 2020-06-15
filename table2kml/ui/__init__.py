@@ -120,7 +120,10 @@ class Main(QMainWindow, Ui_MainWindow):
         self.fill_combobox_altitude()
         self.fill_combobox_folders()
         self.fill_combobox_files()
+
+        # Style options
         self.fill_combobox_color()
+        self.fill_combobox_label_color()
 
     # ------------------------------OTHER WINDOWS-------------------------------
     def file_dialog_open(self):
@@ -208,6 +211,19 @@ class Main(QMainWindow, Ui_MainWindow):
         self.comboBoxColorPalette.clear()
         self.comboBoxColorPalette.addItems(["REDS", "GREENS", "BLUES"])
 
+    def fill_combobox_label_color(self):
+        self.comboBoxLabelColorColumn.clear()
+        items = [""] + [
+            name for name, ty in self.columns
+            if ty is np.dtype("float64") or ty is np.dtype("int64")
+        ]
+        self.comboBoxLabelColorColumn.addItems(items)
+        self.fill_combobox_label_palette()
+
+    def fill_combobox_label_palette(self):
+        self.comboBoxLabelColorPalette.clear()
+        self.comboBoxLabelColorPalette.addItems(["REDS", "GREENS", "BLUES"])
+
     # ---------------------------------MAKE KML---------------------------------
     def get_options(self):
         options = dict(
@@ -220,10 +236,14 @@ class Main(QMainWindow, Ui_MainWindow):
             files=self.comboBoxFiles.currentText(),
             style=dict(
                 icon_color=self.comboBoxColorColumn.currentText(),
-                icon_fmt_name=self.comboBoxColorPalette.currentText(),
+                icon_color_palette=self.comboBoxColorPalette.currentText(),
                 icon_n_colors=self.spinBoxBinNumber.value(),
                 icon_shape=self.icons.get(self.selected_icon),
                 icon_inverse_colors=self.checkBoxInverseColor.isChecked(),
+                label_color=self.comboBoxLabelColorColumn.currentText(),
+                label_color_palette=self.comboBoxLabelColorPalette.currentText(),
+                label_n_colors=self.spinBoxLabelBinNumber.value(),
+                label_inverse_colors=self.checkBoxLabelInverseColor.isChecked(),
             ),
         )
         opts = table2kml.Options(**options)

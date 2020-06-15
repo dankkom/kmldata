@@ -325,6 +325,43 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.widgetIconShapeSelection)
 
+        self.labelLabelColor = QLabel(self.groupBoxStyleOptions)
+        self.labelLabelColor.setObjectName(u"labelLabelColor")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.labelLabelColor)
+
+        self.widgetLabelColor = QWidget(self.groupBoxStyleOptions)
+        self.widgetLabelColor.setObjectName(u"widgetLabelColor")
+        self.gridLayout_2 = QGridLayout(self.widgetLabelColor)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setHorizontalSpacing(10)
+        self.gridLayout_2.setVerticalSpacing(5)
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.comboBoxLabelColorColumn = QComboBox(self.widgetLabelColor)
+        self.comboBoxLabelColorColumn.setObjectName(u"comboBoxLabelColorColumn")
+
+        self.gridLayout_2.addWidget(self.comboBoxLabelColorColumn, 0, 0, 1, 1)
+
+        self.spinBoxLabelBinNumber = QSpinBox(self.widgetLabelColor)
+        self.spinBoxLabelBinNumber.setObjectName(u"spinBoxLabelBinNumber")
+        self.spinBoxLabelBinNumber.setMinimum(1)
+        self.spinBoxLabelBinNumber.setMaximum(10)
+
+        self.gridLayout_2.addWidget(self.spinBoxLabelBinNumber, 0, 1, 1, 1)
+
+        self.comboBoxLabelColorPalette = QComboBox(self.widgetLabelColor)
+        self.comboBoxLabelColorPalette.setObjectName(u"comboBoxLabelColorPalette")
+
+        self.gridLayout_2.addWidget(self.comboBoxLabelColorPalette, 1, 0, 1, 1)
+
+        self.checkBoxLabelInverseColor = QCheckBox(self.widgetLabelColor)
+        self.checkBoxLabelInverseColor.setObjectName(u"checkBoxLabelInverseColor")
+
+        self.gridLayout_2.addWidget(self.checkBoxLabelInverseColor, 1, 1, 1, 1)
+
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.widgetLabelColor)
+
 
         self.horizontalLayout_3.addWidget(self.groupBoxStyleOptions)
 
@@ -420,6 +457,8 @@ class Ui_MainWindow(object):
         self.labelIconShape.setText(QCoreApplication.translate("MainWindow", u"Icon Shape", None))
         self.labelSelectedIconShape.setText("")
         self.pushButtonSelectIcon.setText(QCoreApplication.translate("MainWindow", u"Select Icon Shape", None))
+        self.labelLabelColor.setText(QCoreApplication.translate("MainWindow", u"Label Color", None))
+        self.checkBoxLabelInverseColor.setText(QCoreApplication.translate("MainWindow", u"Inverse", None))
         self.pushButtonMakeKML.setText(QCoreApplication.translate("MainWindow", u"Make KML", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuAbout.setTitle(QCoreApplication.translate("MainWindow", u"About", None))

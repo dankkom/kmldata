@@ -684,6 +684,60 @@ QGroupBox::title {
             </layout>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelLabelColor">
+            <property name="text">
+             <string>Label Color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QWidget" name="widgetLabelColor" native="true">
+            <layout class="QGridLayout" name="gridLayout_2">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <property name="horizontalSpacing">
+              <number>10</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>5</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QComboBox" name="comboBoxLabelColorColumn"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="spinBoxLabelBinNumber">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QComboBox" name="comboBoxLabelColorPalette"/>
+             </item>
+             <item row="1" column="1">
+              <widget class="QCheckBox" name="checkBoxLabelInverseColor">
+               <property name="text">
+                <string>Inverse</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
