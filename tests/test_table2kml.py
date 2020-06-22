@@ -4,8 +4,9 @@
 import string
 import unittest
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from pykml.factory import KML_ElementMaker as KML
 
 import table2kml
 from table2kml import styling
@@ -23,6 +24,7 @@ class TestTable2KMLFunctions(unittest.TestCase):
             row=self.data_sample.iloc[0],
             data_cols=["values0", "values1"],
         )
+        self.assertIsInstance(description, KML.description().__class__)
 
 
 class TestTable2KMLIntegration(unittest.TestCase):
@@ -35,6 +37,7 @@ class TestTable2KMLIntegration(unittest.TestCase):
             data_cols=["values0", "values1"],
             folders=["Folder1", "Folder2", "Folder3"],
             name="name",
+            files="Files",
             style={
                 "icon_color": "Color",
                 "icon_color_palette": "blues",
@@ -56,12 +59,21 @@ class TestTable2KMLIntegration(unittest.TestCase):
             row=self.data_sample_with_digits.iloc[0],
             opt=self.opts,
         )
+        self.assertIsInstance(placemark, KML.placemark().__class__)
 
     def test_make_kml(self):
         kml = table2kml.make_kml(
             data=self.data_sample,
             opt=self.opts,
         )
+        self.assertIsInstance(kml, KML.kml().__class__)
+
+    def test_make_kmls(self):
+        kmls_dict = table2kml.make_kmls(
+            data=self.data_sample,
+            opt=self.opts,
+        )
+        self.assertIsInstance(kmls_dict, dict)
 
 
 if __name__ == "__main__":

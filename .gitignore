@@ -18,10 +18,11 @@ dist
 *.ipynb
 .ipynb_checkpoints
 
-# Images
-*.png
-*.jpg
-*.svg
+# Icons folder
+icons/
 
 # Sublime Text
 *.sublime-*
+
+# Doit files
+.doit*

@@ -38,23 +38,6 @@ class TestStylingIntegrationFuntionsWithData(unittest.TestCase):
         )
 
 
-class TestRGB(unittest.TestCase):
-
-    def test_RGB(self):
-        white = color.RGB(1, 1, 1)
-        black = color.RGB(0, 0, 0)
-        self.assertEqual(str(white), "#FFFFFFFF")
-        self.assertEqual(str(black), "#FF000000")
-
-
-class TestColorInterpolation(unittest.TestCase):
-
-    def test_interpolation(self):
-        color_start = color.RGB(1, 0, 1)
-        color_end = color.RGB(0.25, 0.75, 0.5)
-        interpolation = color.ColorInterpolation(color_start, color_end, 10)
-
-
 class TestStylingStyleOptionsClass(unittest.TestCase):
 
     def test_StyleOptions(self):

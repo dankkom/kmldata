@@ -93,7 +93,7 @@ def random_color(seed: int = 0) -> str:
     return "".join((a, b, g, r)).upper()
 
 
-def get_value(digit: int, n: int, inverse: bool = False) -> int:
+def get_value(digit: int, n: int, inverse: bool = False) -> float:
     v = digit / n
     if inverse:
         v = 1 - v
