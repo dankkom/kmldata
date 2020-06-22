@@ -86,6 +86,7 @@ class Main(QMainWindow, Ui_MainWindow):
         self.actionOpenFile.triggered.connect(self.file_dialog_open)
         self.actionExit.triggered.connect(self.close_application)
         self.actionLicense.triggered.connect(self.view_license)
+        self.actionSourceCode.triggered.connect(self.view_source_code)
         self.actionAbout.triggered.connect(self.about_window)
         self.icons = load_icon_shapes()
         self.change_selected_icon_shape("donut")
