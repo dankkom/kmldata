@@ -251,7 +251,7 @@ class Main(QMainWindow, Ui_MainWindow):
             lat=self.comboBoxLatitude.currentText(),
             lon=self.comboBoxLongitude.currentText(),
             name=self.comboBoxName.currentText(),
-            data_cols=self.comboBoxDescription.currentText(),
+            data_cols=[self.comboBoxDescription.currentText()],
             altitude=self.comboBoxAltitude.currentText(),
             folders=self.comboBoxFolders.currentText(),
             files=self.comboBoxFiles.currentText(),
