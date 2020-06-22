@@ -210,7 +210,17 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def fill_combobox_palette(self):
         self.comboBoxColorPalette.clear()
-        self.comboBoxColorPalette.addItems(["REDS", "GREENS", "BLUES"])
+        self.comboBoxColorPalette.addItems(
+            [
+                "reds",
+                "yellows",
+                "greens",
+                "cyans",
+                "blues",
+                "magentas",
+                "viridis",
+            ]
+        )
 
     def fill_combobox_label_color(self):
         self.comboBoxLabelColorColumn.clear()
@@ -223,7 +233,17 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def fill_combobox_label_palette(self):
         self.comboBoxLabelColorPalette.clear()
-        self.comboBoxLabelColorPalette.addItems(["REDS", "GREENS", "BLUES"])
+        self.comboBoxLabelColorPalette.addItems(
+            [
+                "reds",
+                "yellows",
+                "greens",
+                "cyans",
+                "blues",
+                "magentas",
+                "viridis",
+            ]
+        )
 
     # ---------------------------------MAKE KML---------------------------------
     def get_options(self):
