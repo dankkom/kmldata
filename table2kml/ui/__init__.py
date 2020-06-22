@@ -272,10 +272,15 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def make_kml(self):
         options = self.get_options()
-        pprint.pprint(options.json())
-        print("Dirpath:", self.dirpath)
-        # kml = table2kml.make_kml(self.data, options)
-        # table2kml.save_kml(kml, "gui.kml")
+        kmls = table2kml.make_kmls(self.data, options)
+        for kml_name in kmls:
+            table2kml.save_kml(
+                kmls[kml_name],
+                os.path.join(
+                    self.dirpath,
+                    f"{kml_name}.kml",
+                )
+            )
 
 
 def get_icon_pixmap(name):
