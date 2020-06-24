@@ -2,7 +2,7 @@ import unittest
 
 from pykml.factory import KML_ElementMaker as KML
 
-from table2kml import color, styling
+from kmldata import color, styling
 
 from tests import make_data_sample
 

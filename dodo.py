@@ -1,7 +1,7 @@
 import os
 import urllib.request
 
-from table2kml.helper import load_icon_shapes
+from kmldata.helper import load_icon_shapes
 
 
 def task_compile_ui_files():
@@ -19,7 +19,7 @@ def task_compile_ui_files():
         yield {
             "name": dependency,
             "file_dep": [os.path.join("designer", dependency)],
-            "targets": [os.path.join("table2kml", "ui", target)],
+            "targets": [os.path.join("kmldata", "ui", target)],
             "actions": ["pyside2-uic %(dependencies)s > %(targets)s"],
         }
 
@@ -27,7 +27,7 @@ def task_compile_ui_files():
 def task_compile_qrc_image():
     return {
         "file_dep": [os.path.join("designer", "image.qrc")],
-        "targets": [os.path.join("table2kml", "ui", "image_rc.py")],
+        "targets": [os.path.join("kmldata", "ui", "image_rc.py")],
         "actions": ["pyside2-rcc %(dependencies)s -o %(targets)s"],
     }
 
@@ -42,9 +42,9 @@ def correct_imports(filepath):
 
 def task_correct_imports():
     files = [
-        os.path.join("table2kml", "ui", "ui_mainwindow.py"),
-        os.path.join("table2kml", "ui", "ui_aboutwindow.py"),
-        os.path.join("table2kml", "ui", "ui_selecticonwindow.py"),
+        os.path.join("kmldata", "ui", "ui_mainwindow.py"),
+        os.path.join("kmldata", "ui", "ui_aboutwindow.py"),
+        os.path.join("kmldata", "ui", "ui_selecticonwindow.py"),
     ]
     return {
         "file_dep": files,
@@ -62,7 +62,7 @@ def download_icon(url, name, icon_dir_path):
 
 
 def task_download_icons():
-    icon_dir_path = os.path.join("table2kml", "ui", "icons")
+    icon_dir_path = os.path.join("kmldata", "ui", "icons")
     icon_shapes = load_icon_shapes()
     for name in icon_shapes:
         url = icon_shapes.get(name)

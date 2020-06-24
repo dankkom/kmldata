@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from table2kml import helper
+from kmldata import helper
 
 
 class TestHelperFunctions(unittest.TestCase):

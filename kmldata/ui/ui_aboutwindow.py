@@ -137,7 +137,7 @@ class Ui_AboutWindow(object):
     def retranslateUi(self, AboutWindow):
         AboutWindow.setWindowTitle(QCoreApplication.translate("AboutWindow", u"About", None))
         self.label_2.setText(QCoreApplication.translate("AboutWindow", u"xlToKML", None))
-        self.textBrowser.setMarkdown(QCoreApplication.translate("AboutWindow", u"xlToKML is part of table2kml Python package.\n"
+        self.textBrowser.setMarkdown(QCoreApplication.translate("AboutWindow", u"xlToKML is part of kmldata Python package.\n"
 "\n"
 "Author:\n"
 "  dkkomesu\n"
@@ -147,7 +147,7 @@ class Ui_AboutWindow(object):
 "\n"
 "Source code:\n"
 "  \n"
-"[github.com/dkkomesu/table2kml](https://github.com/dkkomesu/xl2kml)\n"
+"[github.com/dkkomesu/kmldata](https://github.com/dkkomesu/kmldata)\n"
 "\n"
 "", None))
         self.textBrowser.setHtml(QCoreApplication.translate("AboutWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -155,14 +155,14 @@ class Ui_AboutWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">xlToKML is part of table2kml Python package.</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">xlToKML is part of kmldata Python package.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Author:<br />  dkkomesu</p>\n"
 "<p style=\"-qt-paragraph-type:empt"
                         "y; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">License:<br />  LGPLv3</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Source code:<br />  <a href=\"https://github.com/dkkomesu/xl2kml\"><span style=\" text-decoration: underline; color:#0000ff;\">github.com/dkkomesu/table2kml</span></a></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Source code:<br />  <a href=\"https://github.com/dkkomesu/kmldata\"><span style=\" text-decoration: underline; color:#0000ff;\">github.com/dkkomesu/kmldata</span></a></p></body></html>", None))
         self.labelPythonPowered.setText("")
     # retranslateUi
 

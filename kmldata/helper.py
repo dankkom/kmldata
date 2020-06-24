@@ -54,7 +54,7 @@ def load_icon_shapes():
         Google's shapes at the Internet
     """
     path = resource_filename(
-        "table2kml",
+        "kmldata",
         "icons.json"
     )
     with open(path, "r") as f:

@@ -1,10 +1,8 @@
-"""GUI for table2kml"""
+"""GUI for kmldata"""
 
 
 import os
 from pkg_resources import resource_filename
-import pprint
-import sys
 
 import numpy as np
 import pandas as pd
@@ -17,23 +15,22 @@ from PySide2.QtGui import (
     QPixmap,
 )
 from PySide2.QtWidgets import (
-    QApplication,
     QDialog,
     QFileDialog,
     QListWidgetItem,
     QMainWindow,
 )
 
-import table2kml
-from table2kml.helper import load_icon_shapes
+from .. import Options, make_kmls, save_kml
+from ..helper import load_icon_shapes
 
 from .ui_aboutwindow import Ui_AboutWindow
 from .ui_mainwindow import Ui_MainWindow
 from .ui_selecticonwindow import Ui_SelectIconWindow
 
 
-url_license = "https://github.com/dkkomesu/table2kml/blob/master/LICENSE"
-url_source_code = "https://github.com/dkkomesu/table2kml"
+url_license = "https://github.com/dkkomesu/kmldata/blob/master/LICENSE"
+url_source_code = "https://github.com/dkkomesu/kmldata"
 
 
 class About(QDialog, Ui_AboutWindow):
@@ -267,14 +264,14 @@ class Main(QMainWindow, Ui_MainWindow):
                 label_inverse_colors=self.checkBoxLabelInverseColor.isChecked(),
             ),
         )
-        opts = table2kml.Options(**options)
+        opts = Options(**options)
         return opts
 
     def make_kml(self):
         options = self.get_options()
-        kmls = table2kml.make_kmls(self.data, options)
+        kmls = make_kmls(self.data, options)
         for kml_name in kmls:
-            table2kml.save_kml(
+            save_kml(
                 kmls[kml_name],
                 os.path.join(
                     self.dirpath,
@@ -285,7 +282,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
 def get_icon_pixmap(name):
     """Get icon shape image"""
-    path = resource_filename("table2kml.ui", f"icons/{name}.png")
+    path = resource_filename("kmldata.ui", f"icons/{name}.png")
     with open(path, "rb") as f:
         data = f.read()
     pixmap = QPixmap()

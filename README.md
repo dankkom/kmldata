@@ -1,14 +1,4 @@
-# table2kml - transform table data into a KML geographic data file
-
-## Install
-
-## Usage
-
-### GUI
-
-### CLI
-
-### Import package
+# kmldata - transform table data into a KML file and vice versa
 
 ## License
 
