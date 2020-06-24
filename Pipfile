@@ -8,6 +8,8 @@ autopep8 = "*"
 pylint = "*"
 doit = "*"
 pyinstaller = "*"
+pypiwin32 = "*"
+setuptools = "<45.0.0"
 
 [packages]
 pykml = "*"
