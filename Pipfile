@@ -7,6 +7,7 @@ verify_ssl = true
 autopep8 = "*"
 pylint = "*"
 doit = "*"
+pyinstaller = "*"
 
 [packages]
 pykml = "*"
@@ -14,6 +15,7 @@ pandas = "*"
 lxml = "*"
 xlrd = "*"
 openpyxl = "*"
+pyside2 = "*"
 
 [requires]
 python_version = "3.8"
