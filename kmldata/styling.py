@@ -4,8 +4,8 @@ from typing import List
 import pandas as pd
 from pykml.factory import KML_ElementMaker as KML
 
-from table2kml.helper import get_digits, load_icon_shapes, normalize
-from table2kml import color
+from .helper import get_digits, load_icon_shapes, normalize
+from . import color
 
 
 class StyleOptions:

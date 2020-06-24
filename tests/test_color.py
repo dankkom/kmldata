@@ -1,6 +1,6 @@
 import unittest
 
-from table2kml import color
+from kmldata import color
 
 
 class TestColorInterpolation(unittest.TestCase):

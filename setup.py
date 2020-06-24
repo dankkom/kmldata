@@ -3,7 +3,7 @@
 
 import setuptools
 
-import table2kml
+import kmldata
 
 
 with open("README.md", "r") as f:
@@ -11,29 +11,29 @@ with open("README.md", "r") as f:
 
 
 setuptools.setup(
-    name="table2kml",
-    author=table2kml.__author__,
-    author_email=table2kml.__author_email__,
+    name="kmldata",
+    author=kmldata.__author__,
+    author_email=kmldata.__author_email__,
     description="Transform data tables into KML",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="GNU LGPLv3",
     license_file="LICENSE",
     keywords="kml geospatial pandas GIS",
-    url="https://github.com/dkkomesu/table2kml",
-    packages=setuptools.find_packages(include=["table2kml"]),
+    url="https://github.com/dkkomesu/kmldata",
+    packages=setuptools.find_packages(include=["kmldata"]),
     install_requires=["lxml", "pykml"],
     python_requires=">=3.8, <4",
     package_data={
-        "table2kml": ["icons.json"],
-        "table2kml.ui": ["*.png"],
+        "kmldata": ["icons.json"],
+        "kmldata.ui": ["*.png"],
     },
     include_package_data=True,
     entry_points={
-        "console_scripts": ["table2kml=table2kml.cli:main"]
+        "console_scripts": ["kmldata=kmldata.cli:main"]
     },
     project_urls={
-        "Source Code": "https://github.com/dkkomesu/table2kml",
+        "Source Code": "https://github.com/dkkomesu/kmldata",
     },
     classifiers=[
         "Development Status :: 3 - Alpha",

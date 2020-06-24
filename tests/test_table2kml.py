@@ -1,15 +1,19 @@
 
 # pylint: disable=all
 
-import string
+
 import unittest
 
-import numpy as np
-import pandas as pd
 from pykml.factory import KML_ElementMaker as KML
 
-import table2kml
-from table2kml import styling
+from kmldata import (
+    Options,
+    make_description,
+    make_kml,
+    make_kmls,
+    make_placemark,
+    styling,
+)
 
 from tests import make_data_sample
 
@@ -20,7 +24,7 @@ class TestTable2KMLFunctions(unittest.TestCase):
         self.data_sample = make_data_sample()
 
     def test_make_description(self):
-        description = table2kml.make_description(
+        description = make_description(
             row=self.data_sample.iloc[0],
             data_cols=["values0", "values1"],
         )
@@ -31,7 +35,7 @@ class TestTable2KMLIntegration(unittest.TestCase):
 
     def setUp(self):
         self.data_sample = make_data_sample()
-        self.opts = table2kml.Options(
+        self.opts = Options(
             lat="lat",
             lon="lon",
             data_cols=["values0", "values1"],
@@ -55,21 +59,21 @@ class TestTable2KMLIntegration(unittest.TestCase):
         )
 
     def test_make_placemark(self):
-        placemark = table2kml.make_placemark(
+        placemark = make_placemark(
             row=self.data_sample_with_digits.iloc[0],
             opt=self.opts,
         )
         self.assertIsInstance(placemark, KML.placemark().__class__)
 
     def test_make_kml(self):
-        kml = table2kml.make_kml(
+        kml = make_kml(
             data=self.data_sample,
             opt=self.opts,
         )
         self.assertIsInstance(kml, KML.kml().__class__)
 
     def test_make_kmls(self):
-        kmls_dict = table2kml.make_kmls(
+        kmls_dict = make_kmls(
             data=self.data_sample,
             opt=self.opts,
         )

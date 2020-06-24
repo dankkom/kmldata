@@ -11,7 +11,7 @@ Group the placemarks by folders, color & shapes based on values in the table
 import pandas as pd
 from lxml import etree
 from pykml.factory import KML_ElementMaker as KML
-from table2kml import styling
+from . import styling
 
 
 __author__ = "Daniel K. Komesu"
