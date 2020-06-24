@@ -71,3 +71,10 @@ def task_download_icons():
             "targets": [os.path.join(icon_dir_path, f"{name}.png")],
             "actions": [(download_icon, (url, name, icon_dir_path))]
         }
+
+
+def task_pyinstaller():
+    return {
+        "file_dep": ["xltokml.spec"],
+        "actions": ["pyinstaller %(dependencies)s -y"]
+    }
