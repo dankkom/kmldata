@@ -6,10 +6,6 @@ verify_ssl = true
 [dev-packages]
 autopep8 = "*"
 pylint = "*"
-doit = "*"
-pyinstaller = "*"
-pypiwin32 = "*"
-setuptools = "<45.0.0"
 
 [packages]
 pykml = "*"
@@ -17,7 +13,6 @@ pandas = "*"
 lxml = "*"
 xlrd = "*"
 openpyxl = "*"
-pyside2 = "*"
 
 [requires]
 python_version = "3.8"
