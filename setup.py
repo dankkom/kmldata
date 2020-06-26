@@ -28,9 +28,6 @@ setuptools.setup(
         "kmldata": ["icons.json"],
     },
     include_package_data=True,
-    entry_points={
-        "console_scripts": ["kmldata=kmldata.cli:main"]
-    },
     project_urls={
         "Source Code": "https://github.com/dkkomesu/kmldata",
     },
