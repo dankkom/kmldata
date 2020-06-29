@@ -23,6 +23,3 @@ icons/
 
 # Sublime Text
 *.sublime-*
-
-# Doit files
-.doit*
