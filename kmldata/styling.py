@@ -1,3 +1,5 @@
+"""Code for styling KML Placemarks."""
+
 
 from typing import List
 

@@ -6,7 +6,7 @@ import unittest
 
 from pykml.factory import KML_ElementMaker as KML
 
-from kmldata import (
+from kmldata.factory import (
     Options,
     make_description,
     make_kml,

@@ -14,7 +14,7 @@ setuptools.setup(
     name="kmldata",
     author=kmldata.__author__,
     author_email=kmldata.__author_email__,
-    description="Transform data tables into KML",
+    description="Transform tabular data into KML and vice-versa",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="GNU LGPLv3",
