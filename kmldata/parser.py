@@ -1,3 +1,4 @@
+import numpy as np
 from pykml import parser
 
 
@@ -48,6 +49,22 @@ def get_SimpleData(placemark):
 def get_description(placemark):
     description = placemark.xpath(".//t:description", namespaces=NS)
     return "\n---\n".join(str(d) for d in description)
+
+
+def get_coordinates(placemark):
+    if hasattr(placemark, "Point"):
+        if hasattr(placemark.Point, "coordinates"):
+            lon, lat, alt = placemark.Point.coordinates.text.split(",")
+            return {
+                "Latitude": float(lat),
+                "Longitude": float(lon),
+                "Altitude": float(alt),
+            }
+    return {
+        "Latitude": np.nan,
+        "Longitude": np.nan,
+        "Altitude": np.nan,
+    }
 
 
 def get_placemarks_data(placemarks):
