@@ -110,7 +110,19 @@ def get_dataframe_from_tree(tree: dict) -> pd.DataFrame:
     return df
 
 
-def get_dataframe_from_kml(filepath: str) -> pd.DataFrame:
+def read_kml_data(filepath: str) -> pd.DataFrame:
+    """Read a KML file, returning its data as a Pandas DataFrame
+
+    Parameters
+    ----------
+    filepath : str
+        Path of the KML file to read and parse
+
+    Returns
+    -------
+    pd.core.frame.DataFrame
+        A DataFrame with data from the KML file
+    """
     root = read_kml(filepath)
     doc = get_doc(root)
     tree = get_tree(doc)
