@@ -48,3 +48,28 @@ def get_SimpleData(placemark):
 def get_description(placemark):
     description = placemark.xpath(".//t:description", namespaces=NS)
     return "\n---\n".join(str(d) for d in description)
+
+
+def get_placemarks_data(placemarks):
+    for placemark in placemarks:
+        yield dict(
+            description=get_description(placemark),
+            **get_SimpleData(placemark),
+        )
+
+
+def get_data(tree, folders=None):
+    if folders is None:
+        folders = tuple()
+    for node in tree:
+        if node == "placemarks":
+            for pdata in get_placemarks_data(tree[node]):
+                yield dict(
+                    **{f"Folder{i}": f for i, f in enumerate(folders)},
+                    **pdata,
+                )
+        else:
+            yield from get_data(
+                tree=tree[node],
+                folders=tuple([*folders, str(node)]),
+            )
