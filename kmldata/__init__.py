@@ -7,4 +7,4 @@ from .parser import read_kml_data as read_kml
 
 __author__ = "Daniel K. Komesu"
 __author_email__ = "danielkomesu@gmail.com"
-__version__ = "0.3.0"
+__version__ = "1.0.0"
