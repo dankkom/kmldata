@@ -47,4 +47,4 @@ def get_SimpleData(placemark):
 
 def get_description(placemark):
     description = placemark.xpath(".//t:description", namespaces=NS)
-    return description
+    return "\n---\n".join(str(d) for d in description)
