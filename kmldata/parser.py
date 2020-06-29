@@ -1,4 +1,3 @@
-import lxml.etree as ET
 from pykml import parser
 
 
@@ -53,3 +52,8 @@ def get_SimpleData(placemark):
         for simpledata in placemark.xpath(".//t:SimpleData", namespaces=NS)
     }
     return data
+
+
+def get_description(placemark):
+    description = placemark.xpath(".//t:description", namespaces=NS)
+    return description
