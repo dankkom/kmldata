@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from pykml import parser
 
 
@@ -90,3 +91,17 @@ def get_data(tree, folders=None):
                 tree=tree[node],
                 folders=tuple([*folders, str(node)]),
             )
+
+
+def get_dataframe_from_tree(tree):
+    data = get_data(tree)
+    df = pd.DataFrame.from_records(data)
+    return df
+
+
+def get_dataframe_from_kml(filepath):
+    root = read_kml(filepath)
+    doc = get_doc(root)
+    tree = get_tree(doc)
+    df = get_dataframe_from_tree(tree)
+    return df
