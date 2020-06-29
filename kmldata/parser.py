@@ -72,6 +72,7 @@ def get_placemarks_data(placemarks):
     for placemark in placemarks:
         yield dict(
             description=get_description(placemark),
+            **get_coordinates(placemark),
             **get_SimpleData(placemark),
         )
 
