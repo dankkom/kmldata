@@ -1,4 +1,4 @@
-"""Classes for color manipulation."""
+"""Classes and functions to work with colors."""
 
 
 import random
@@ -32,6 +32,13 @@ class RGB:
         self.b = b
 
     def kml_hex(self):
+        """Get hexadecimal string code for RGB color in KML format.
+
+        Returns
+        -------
+        str
+            String with hexadecimal code of the color.
+        """
         r = int(self.r * 255)
         g = int(self.g * 255)
         b = int(self.b * 255)
@@ -45,17 +52,37 @@ class RGB:
 
 
 class ColorInterpolation:
+    """Object for calculating color interpolation."""
 
     def __init__(self, *colors: RGB):
         self.colors = colors
         self.set_colorspace(*colors)
 
     def set_colorspace(self, *colors):
+        """Set the colors for interpolation.
+
+        Parameters
+        ----------
+        colors : RGB, RGB, ...
+            Colors that will be used to get the color interpolation.
+        """
         self.r_space = list(c.r for c in colors)
         self.g_space = list(c.g for c in colors)
         self.b_space = list(c.b for c in colors)
 
     def get_point(self, n: float):
+        """Get the color resulting from the interpolation.
+
+        Parameters
+        ----------
+        n : float
+            The point (0, 1.) in colorspace to calculate the interpolated color.
+
+        Returns
+        -------
+        RGB
+            The resulting color object from the interpolation.
+        """
         r = interpolate(self.r_space, n)
         g = interpolate(self.g_space, n)
         b = interpolate(self.b_space, n)
@@ -71,17 +98,17 @@ class ColorInterpolation:
 
 
 def random_color(seed: int = 0) -> str:
-    """Generate a random color value for a KML style
+    """Generate a random color value for a KML style.
 
     Parameters
     ----------
     seed : int
-        The seed to random generator for reproducible code
+        The seed to random generator for reproducible code.
 
     Returns
     -------
     str
-        Random color string value
+        Random color string.
     """
     random.seed(seed)
     r = hex(random.randint(0, 255))[2:]
@@ -94,6 +121,22 @@ def random_color(seed: int = 0) -> str:
 
 
 def get_value(digit: int, n: int, inverse: bool = False) -> float:
+    """Return a value between 0-1 given `digit` and `n`.
+
+    Parameters
+    ----------
+    digit : int
+        Position in the linear space that will be returned.
+    n : int
+        The size o linear space.
+    inverse : bool
+        If True returns the inverse value of `digit` position in linear space.
+
+    Returns
+    -------
+    float
+        Number that equals `digit / n` or `1 - digit / n` when `inverse=True`.
+    """
     v = digit / n
     if inverse:
         v = 1 - v
@@ -101,6 +144,18 @@ def get_value(digit: int, n: int, inverse: bool = False) -> float:
 
 
 def get_interpolation(palette_name: str) -> ColorInterpolation:
+    """Return a ColorInterpolation object given the palette name.
+
+    Parameters
+    ----------
+    palette_name : str
+        Name of palette to return.
+
+    Returns
+    -------
+    ColorInterpolation
+        An object to get interpolated colors from the palette.
+    """
     colors = [RGB(*c) for c in PALETTE.get(palette_name)]
     return ColorInterpolation(*colors)
 

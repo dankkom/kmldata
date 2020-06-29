@@ -1,4 +1,11 @@
-"""Code for styling KML Placemarks."""
+"""Styling KML Placemarks.
+
+This module contains classes and functions to add styles to Placemarks in a KML
+file based on the data from a Pandas DataFrame.
+
+The styles options are set and passed to the functions with the `StyleOptions`
+container class.
+"""
 
 
 from typing import List
@@ -11,6 +18,7 @@ from . import color
 
 
 class StyleOptions:
+    """Options to pass style to KML maker functions."""
 
     def __init__(self, **kwargs):
         self.ICON_SHAPES = load_icon_shapes()
@@ -26,7 +34,8 @@ class StyleOptions:
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
 
-    def json(self):
+    def json(self) -> dict:
+        """Get options as a (JSON-like) dictionary."""
         j = {
             k: v for k, v in self.__dict__.items()
             if not k.startswith("_") and not k.isupper() and isinstance(k, str)
@@ -46,23 +55,23 @@ def make_style(
         icon_color: str,
         label_color: str,
 ) -> KML.Style:
-    """Create a KML style object with the given parameters
+    """Create a KML style object with the given parameters.
 
     Parameters
     ----------
     style_name : str
-        The name of style
+        The name of style.
     icon_shape : str
-        URL of the image to use as icon
+        URL of the image to use as icon.
     icon_color : str
-        Hex color code for the icon
+        Hex color code for the icon.
     label_color : str
-        Hex color code for the label
+        Hex color code for the label.
 
     Returns
     -------
     KML.Style
-        The style with the specified settings
+        The style with the specified settings.
     """
     style = KML.Style()
 
@@ -91,8 +100,8 @@ def make_styles(
 ) -> List[KML.Style]:
     """Create a list of styles accordingly the data and StyleOptions.
 
-    data is expected to have a ColorDigit column, added by
-    add_color_digit_column() function.
+    `data` is expected to have a IconColorDigit and a LabelColorDigit column,
+    added by `add_color_digit_column()` function.
 
     Parameters
     ----------
@@ -157,10 +166,23 @@ def make_styles(
 
 
 def add_color_digit_column(
-        df: pd.DataFrame,
+        df: pd.core.frame.DataFrame,
         opts: StyleOptions,
-) -> pd.DataFrame:
-    """Add columns for icon and label digit colors."""
+) -> pd.core.frame.DataFrame:
+    """Add digit columns for icon and label colors.
+
+    Parameters
+    ----------
+    df : pd.core.frame.DataFrame
+        A dataframe.
+    opts : StyleOptions
+        Style options.
+
+    Returns
+    -------
+    pd.core.frame.DataFrame
+        Dataframe with IconColorDigit and LabelColorDigit columns.
+    """
     if opts.icon_color:
         normal_values = normalize(df[opts.icon_color])
         icon_digits = get_digits(normal_values, n=opts.icon_n_colors)
@@ -174,9 +196,35 @@ def add_color_digit_column(
     return df.assign(IconColorDigit=icon_digits, LabelColorDigit=label_digits)
 
 
-def get_style_url_from_row(row):
+def get_style_url_from_row(row: pd.core.series.Series) -> str:
+    """Get style string url from row with digits.
+
+    Parameters
+    ----------
+    row : pd.core.series.Series
+        A row of a dataframe with digits to get the style string from.
+
+    Returns
+    -------
+    str
+        The style string URL to refer to the style.
+    """
     return f"#color_{row['IconColorDigit']-1}-{row['LabelColorDigit']-1}"
 
 
-def get_style_name_from_digits(icon_digit, label_digit):
+def get_style_name_from_digits(icon_digit: int, label_digit: int) -> str:
+    """Get style string url from digits.
+
+    Parameters
+    ----------
+    icon_digit : int
+        Number identifier for icon style.
+    label_digit : int
+        Number identifier for label style.
+
+    Returns
+    -------
+    str
+        Style string URL.
+    """
     return f"color_{icon_digit-1}-{label_digit-1}"
