@@ -112,8 +112,8 @@ class TestParser(unittest.TestCase):
         df = parser.get_dataframe_from_tree(tree)
         self.assertIsInstance(df, pd.core.frame.DataFrame)
 
-    def test_get_dataframe_from_kml(self):
-        df = parser.get_dataframe_from_kml("Default.kml")
+    def test_read_kml_data(self):
+        df = parser.read_kml_data("Default.kml")
         self.assertIsInstance(df, pd.core.frame.DataFrame)
 
     def tearDown(self):
