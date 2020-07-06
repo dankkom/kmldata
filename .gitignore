@@ -23,3 +23,7 @@ icons/
 
 # Sublime Text
 *.sublime-*
+
+
+# Test coverage
+.coverage
