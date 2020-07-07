@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a85e2e17b9ae8a4f3ba7d82054c204b741890fe96f709d87956f10eec6f99a49"
+            "sha256": "93ffafb71404da14486a26cc493951b1471975efecface039ebcfecd69a17036"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -28,6 +28,10 @@
                 "sha256:472872e096eb8df219c23f2689fc336668bdb43d194094b5cc1707e1640acfc8"
             ],
             "version": "==1.4.1"
+        },
+        "kmldata": {
+            "editable": true,
+            "path": "."
         },
         "lxml": {
             "hashes": [
@@ -254,11 +258,11 @@
         },
         "coveralls": {
             "hashes": [
-                "sha256:41bd57b60321dfd5b56e990ab3f7ed876090691c21a9e3b005e1f6e42e6ba4b9",
-                "sha256:d213f5edd49053d03f0db316ccabfe17725f2758147afc9a37eaca9d8e8602b5"
+                "sha256:ccdaf0b875ee9b30d8775f08aec78543898c6a10ae7b3c312348c6f96dc66bc5",
+                "sha256:ea2172efa91ae38096e94076f4ff19d63c1ba94ca4fcf8e54b775c359088fe52"
             ],
             "index": "pypi",
-            "version": "==2.0.0"
+            "version": "==2.1.0"
         },
         "docopt": {
             "hashes": [
