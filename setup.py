@@ -33,7 +33,7 @@ setuptools.setup(
     description="Transform tabular data into KML and vice-versa",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    license="GNU LGPLv3",
+    license="GNU GPLv3",
     keywords="kml geospatial pandas GIS",
     url="https://github.com/dkkomesu/kmldata",
     packages=setuptools.find_packages(include=["kmldata"]),
@@ -47,12 +47,11 @@ setuptools.setup(
         "Source Code": "https://github.com/dkkomesu/kmldata",
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
         "Topic :: Utilities",
         "Topic :: Scientific/Engineering :: GIS",
     ],
-    test_suite="TestTable2KML",
 )

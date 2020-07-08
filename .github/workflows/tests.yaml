@@ -3,6 +3,8 @@ name: tests
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -17,12 +19,13 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip pipenv
-        pipenv install
-    - name: Coveralls
+        python -m pip install --upgrade pip wheel
+        pip install -r requirements.txt
+        pip install .
+    - name: Run tests
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
-        pipenv install --dev
-        pipenv run pytest --cov=kmldata
-        pipenv run coveralls
+        pip install pytest pytest-cov coveralls
+        pytest --cov=kmldata
+        coveralls

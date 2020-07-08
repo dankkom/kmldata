@@ -18,9 +18,6 @@ dist
 *.ipynb
 .ipynb_checkpoints
 
-# Icons folder
-icons/
-
 # Sublime Text
 *.sublime-*
 
