@@ -46,7 +46,7 @@ class TestStylingStyleOptionsClass(unittest.TestCase):
             icon_color="values0",
             icon_n_colors=5,
             icon_inverse_colors=False,
-            icon_shape="http://maps.google.com/mapfiles/kml/shapes/donut.png",
+            icon_shape="donut",
         )
 
 
@@ -61,13 +61,13 @@ class TestStylingFunctions(unittest.TestCase):
         ns = "{http://www.opengis.net/kml/2.2}"
         style_name = "style1"
         icon_shape = "http://maps.google.com/mapfiles/kml/shapes/donut.png"
-        icon_color = "FFFFFF00"
-        label_color = "FFFF000000"
+        icon_color_hex = "FFFFFF00"
+        label_color_hex = "FFFF000000"
         style = styling.make_style(
             style_name=style_name,
             icon_shape=icon_shape,
-            icon_color=icon_color,
-            label_color=label_color,
+            icon_color_hex=icon_color_hex,
+            label_color_hex=label_color_hex,
         )
         self.assertIsInstance(style, type(KML.Style()))
         self.assertEqual(style.tag, ns + "Style")
@@ -78,7 +78,7 @@ class TestStylingFunctions(unittest.TestCase):
         self.assertEqual(
             icon.find(ns + "href"), icon_shape)
         self.assertEqual(
-            iconstyle.find(ns + "color"), icon_color)
+            iconstyle.find(ns + "color"), icon_color_hex)
 
 
 if __name__ == "__main__":

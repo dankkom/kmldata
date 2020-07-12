@@ -5,7 +5,6 @@ import pandas as pd
 from pykml.factory import KML_ElementMaker as KML
 
 import kmldata
-from kmldata import helper
 from kmldata import parser
 
 

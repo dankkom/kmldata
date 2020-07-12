@@ -17,18 +17,23 @@ from .helper import get_digits, load_icon_shapes, normalize
 from . import color
 
 
+ICON_SHAPES = load_icon_shapes()
+ICON_DIGIT = "IconColorDigit"
+LABEL_DIGIT = "LabelColorDigit"
+DEFAULT_ICON_SHAPE_URL = "http://maps.google.com/mapfiles/kml/shapes/donut.png"
+
+
 class StyleOptions:
     """Options to pass style to KML maker functions."""
 
     def __init__(self, **kwargs):
-        self.ICON_SHAPES = load_icon_shapes()
-        self.icon_color_palette = None
-        self.icon_color = None
+        self.icon_color_palette = "viridis"
+        self.icon_color = None  # Column name for color
         self.icon_n_colors = 1
         self.icon_inverse_colors = False
-        self.icon_shape = self.ICON_SHAPES["donut"]
-        self.label_color_palette = None
-        self.label_color = None
+        self.icon_shape = "donut"
+        self.label_color_palette = "viridis"
+        self.label_color = None  # Column name for color
         self.label_n_colors = 1
         self.label_inverse_colors = False
         for key in kwargs:
@@ -52,8 +57,8 @@ class StyleOptions:
 def make_style(
         style_name: str,
         icon_shape: str,
-        icon_color: str,
-        label_color: str,
+        icon_color_hex: str,
+        label_color_hex: str,
 ) -> KML.Style:
     """Create a KML style object with the given parameters.
 
@@ -63,9 +68,9 @@ def make_style(
         The name of style.
     icon_shape : str
         URL of the image to use as icon.
-    icon_color : str
+    icon_color_hex : str
         Hex color code for the icon.
-    label_color : str
+    label_color_hex : str
         Hex color code for the label.
 
     Returns
@@ -78,12 +83,17 @@ def make_style(
     icon_style = KML.IconStyle(
         KML.scale(1),
         KML.Icon(
-            KML.href(icon_shape)
+            KML.href(
+                ICON_SHAPES.get(
+                    icon_shape,
+                    DEFAULT_ICON_SHAPE_URL
+                )
+            )
         ),
-        KML.color(icon_color)
+        KML.color(icon_color_hex)
     )
     label_style = KML.LabelStyle(
-        KML.color(label_color)
+        KML.color(label_color_hex)
     )
 
     style.append(icon_style)
@@ -124,41 +134,33 @@ def make_styles(
         palette_name=opts.label_color_palette,
     )
 
-    it = data[
-        [
-            "IconColorDigit",
-            "LabelColorDigit",
-        ]
-    ].drop_duplicates().itertuples()
+    it = data[[ICON_DIGIT, LABEL_DIGIT]].drop_duplicates().itertuples()
 
     for row in it:
         icon_digit = row[1]
         label_digit = row[2]
+        style_name = get_style_name_from_digits(icon_digit, label_digit)
 
-        icon_color = str(
-            icon_color_interpolation.get_point(
-                n=color.get_value(
-                    icon_digit-1,
-                    opts.icon_n_colors,
-                    inverse=opts.icon_inverse_colors,
-                ),
-            )
-        )
-        label_color = str(
-            label_color_interpolation.get_point(
-                n=color.get_value(
-                    label_digit-1,
-                    opts.label_n_colors,
-                    inverse=opts.label_inverse_colors,
-                ),
-            )
-        )
+        icon_color_hex = icon_color_interpolation.get_point(
+            n=color.get_value(
+                icon_digit-1,
+                opts.icon_n_colors,
+                inverse=opts.icon_inverse_colors,
+            ),
+        ).kml_hex()
+        label_color_hex = label_color_interpolation.get_point(
+            n=color.get_value(
+                label_digit-1,
+                opts.label_n_colors,
+                inverse=opts.label_inverse_colors,
+            ),
+        ).kml_hex()
 
         style = make_style(
-            style_name=get_style_name_from_digits(icon_digit, label_digit),
+            style_name=style_name,
             icon_shape=opts.icon_shape,
-            icon_color=icon_color,
-            label_color=label_color,
+            icon_color_hex=icon_color_hex,
+            label_color_hex=label_color_hex,
         )
         styles.append(style)
 
@@ -193,7 +195,12 @@ def add_color_digit_column(
         label_digits = get_digits(normal_values, n=opts.label_n_colors)
     else:
         label_digits = 1
-    return df.assign(IconColorDigit=icon_digits, LabelColorDigit=label_digits)
+    return df.assign(
+        **{
+            ICON_DIGIT: icon_digits,
+            LABEL_DIGIT: label_digits,
+        }
+    )
 
 
 def get_style_url_from_row(row: pd.core.series.Series) -> str:
@@ -209,7 +216,7 @@ def get_style_url_from_row(row: pd.core.series.Series) -> str:
     str
         The style string URL to refer to the style.
     """
-    return f"#color_{row['IconColorDigit']-1}-{row['LabelColorDigit']-1}"
+    return f"#color_{row[ICON_DIGIT]-1}-{row[LABEL_DIGIT]-1}"
 
 
 def get_style_name_from_digits(icon_digit: int, label_digit: int) -> str:

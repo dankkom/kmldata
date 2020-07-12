@@ -18,7 +18,7 @@ from kmldata.factory import (
 from tests import make_data_sample
 
 
-class TestTable2KMLFunctions(unittest.TestCase):
+class TestKmlDataFunctions(unittest.TestCase):
 
     def setUp(self):
         self.data_sample = make_data_sample()
@@ -31,7 +31,7 @@ class TestTable2KMLFunctions(unittest.TestCase):
         self.assertIsInstance(description, KML.description().__class__)
 
 
-class TestTable2KMLIntegration(unittest.TestCase):
+class TestKmlDataIntegration(unittest.TestCase):
 
     def setUp(self):
         self.data_sample = make_data_sample()
