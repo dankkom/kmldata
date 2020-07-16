@@ -1,6 +1,7 @@
 """Classes and functions to work with colors."""
 
 
+from math import sqrt
 import random
 
 import numpy as np
@@ -13,15 +14,10 @@ PALETTE = {
     "cyans": ((1, 1, 1), (0, 1, 1)),
     "blues": ((1, 1, 1), (0, 0, 1)),
     "magentas": ((1, 1, 1), (1, 0, 1)),
-    "viridis": (
-        (70/255, 0, 85/255),
-        (35/255, 140/255, 140/255),
-        (1, 230/255, 25/255)
-    ),
 }
 
 
-class RGB:
+class Color:
     """Color representation in the RGB color system."""
 
     __slots__ = ("r", "g", "b")
@@ -51,53 +47,35 @@ class RGB:
         return f"{self.__class__.__name__}({self.r}, {self.g}, {self.b})"
 
 
-class ColorInterpolation:
-    """Object for calculating color interpolation."""
+class ColorMap:
 
-    def __init__(self, *colors: RGB):
-        self.colors = colors
-        self.set_colorspace(*colors)
+    def __init__(self, color_a, color_b, n_colors):
+        self.color_a = color_a
+        self.color_b = color_b
+        self.n_colors = n_colors
+        self.calculate_mapping()
 
-    def set_colorspace(self, *colors):
-        """Set the colors for interpolation.
+    def calculate_mapping(self):
+        r = np.linspace(self.color_a.r, self.color_b.r, self.n_colors)
+        g = np.linspace(self.color_a.g, self.color_b.g, self.n_colors)
+        b = np.linspace(self.color_a.b, self.color_b.b, self.n_colors)
+        self.mapping = {
+            i: Color(r=r[i], g=g[i], b=b[i])
+            for i in range(self.n_colors)
+        }
 
-        Parameters
-        ----------
-        colors : RGB, RGB, ...
-            Colors that will be used to get the color interpolation.
-        """
-        self.r_space = list(c.r for c in colors)
-        self.g_space = list(c.g for c in colors)
-        self.b_space = list(c.b for c in colors)
+    def get_color(self, digit: int) -> Color:
+        if digit > self.n_colors-1 or digit < 0:
+            raise ValueError(f"Invalid digit value: {digit}")
+        return self.mapping[digit]
 
-    def get_point(self, n: float):
-        """Get the color resulting from the interpolation.
-
-        Parameters
-        ----------
-        n : float
-            The point (0, 1.) in colorspace to calculate the interpolated color.
-
-        Returns
-        -------
-        RGB
-            The resulting color object from the interpolation.
-        """
-        r = interpolate(self.r_space, n)
-        g = interpolate(self.g_space, n)
-        b = interpolate(self.b_space, n)
-        return RGB(r=r, g=g, b=b)
-
-    def __getitem__(self, key):
-        if key < 0 or key > self.n:
-            raise IndexError()
-        return self.get_point(key)
-
-    def __str__(self):
-        return f"ColorInterpolation[{' '.join([str(c) for c in self.colors])}]"
+    def __getitem__(self, digit: int):
+        if digit > self.n_colors-1 or digit < 0:
+            raise ValueError(f"Invalid digit value: {digit}")
+        return self.get_color(digit)
 
 
-def random_color(seed: int = 0) -> RGB:
+def random_color(seed: int = 0) -> Color:
     """Generate a random color object for a KML style.
 
     Parameters
@@ -107,7 +85,7 @@ def random_color(seed: int = 0) -> RGB:
 
     Returns
     -------
-    RGB
+    Color
         Random color object.
     """
     random.seed(seed)
@@ -116,7 +94,7 @@ def random_color(seed: int = 0) -> RGB:
     g = hex(random.randint(0, 255))[2:]
     random.seed(seed+2)
     b = hex(random.randint(0, 255))[2:]
-    return RGB(r=r, g=g, b=b)
+    return Color(r=r, g=g, b=b)
 
 
 def get_value(digit: int, n: int, inverse: bool = False) -> float:
@@ -140,25 +118,3 @@ def get_value(digit: int, n: int, inverse: bool = False) -> float:
     if inverse:
         v = 1 - v
     return v
-
-
-def get_interpolation(palette_name: str) -> ColorInterpolation:
-    """Return a ColorInterpolation object given the palette name.
-
-    Parameters
-    ----------
-    palette_name : str
-        Name of palette to return.
-
-    Returns
-    -------
-    ColorInterpolation
-        An object to get interpolated colors from the palette.
-    """
-    colors = [RGB(*c) for c in PALETTE.get(palette_name)]
-    return ColorInterpolation(*colors)
-
-
-def interpolate(colorspace, n):
-    x = np.linspace(0, 1, len(colorspace))
-    return np.interp(x=[n], xp=x, fp=colorspace)[0]
