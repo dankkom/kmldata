@@ -97,8 +97,8 @@ class ColorInterpolation:
         return f"ColorInterpolation[{' '.join([str(c) for c in self.colors])}]"
 
 
-def random_color(seed: int = 0) -> str:
-    """Generate a random color value for a KML style.
+def random_color(seed: int = 0) -> RGB:
+    """Generate a random color object for a KML style.
 
     Parameters
     ----------
@@ -107,8 +107,8 @@ def random_color(seed: int = 0) -> str:
 
     Returns
     -------
-    str
-        Random color string.
+    RGB
+        Random color object.
     """
     random.seed(seed)
     r = hex(random.randint(0, 255))[2:]
@@ -116,8 +116,7 @@ def random_color(seed: int = 0) -> str:
     g = hex(random.randint(0, 255))[2:]
     random.seed(seed+2)
     b = hex(random.randint(0, 255))[2:]
-    a = "ff"
-    return "".join((a, b, g, r)).upper()
+    return RGB(r=r, g=g, b=b)
 
 
 def get_value(digit: int, n: int, inverse: bool = False) -> float:
