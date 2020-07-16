@@ -13,7 +13,7 @@ from typing import List
 import pandas as pd
 from pykml.factory import KML_ElementMaker as KML
 
-from .helper import get_digits, load_icon_shapes, normalize
+from .helper import get_digits, load_icon_shapes
 from . import color
 
 
@@ -127,11 +127,13 @@ def make_styles(
     """
     styles = []
 
-    icon_color_interpolation = color.get_interpolation(
+    icon_cm = color.get_colormap_from_palette(
         palette_name=opts.icon_color_palette,
+        n_colors=opts.icon_n_colors,
     )
-    label_color_interpolation = color.get_interpolation(
+    label_cm = color.get_colormap_from_palette(
         palette_name=opts.label_color_palette,
+        n_colors=opts.label_n_colors,
     )
 
     it = data[[ICON_DIGIT, LABEL_DIGIT]].drop_duplicates().itertuples()
@@ -141,20 +143,8 @@ def make_styles(
         label_digit = row[2]
         style_name = get_style_name_from_digits(icon_digit, label_digit)
 
-        icon_color_hex = icon_color_interpolation.get_point(
-            n=color.get_value(
-                icon_digit-1,
-                opts.icon_n_colors,
-                inverse=opts.icon_inverse_colors,
-            ),
-        ).kml_hex()
-        label_color_hex = label_color_interpolation.get_point(
-            n=color.get_value(
-                label_digit-1,
-                opts.label_n_colors,
-                inverse=opts.label_inverse_colors,
-            ),
-        ).kml_hex()
+        icon_color_hex = icon_cm.get_color(digit=icon_digit-1).kml_hex()
+        label_color_hex = label_cm.get_color(digit=label_digit-1).kml_hex()
 
         style = make_style(
             style_name=style_name,
@@ -186,13 +176,11 @@ def add_color_digit_column(
         Dataframe with IconColorDigit and LabelColorDigit columns.
     """
     if opts.icon_color:
-        normal_values = normalize(df[opts.icon_color])
-        icon_digits = get_digits(normal_values, n=opts.icon_n_colors)
+        icon_digits = get_digits(df[opts.icon_color], n=opts.icon_n_colors)
     else:
         icon_digits = 1
     if opts.label_color:
-        normal_values = normalize(df[opts.label_color])
-        label_digits = get_digits(normal_values, n=opts.label_n_colors)
+        label_digits = get_digits(df[opts.icon_color], n=opts.label_n_colors)
     else:
         label_digits = 1
     return df.assign(

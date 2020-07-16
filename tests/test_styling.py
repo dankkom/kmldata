@@ -41,7 +41,7 @@ class TestStylingIntegrationFuntionsWithData(unittest.TestCase):
 class TestStylingStyleOptionsClass(unittest.TestCase):
 
     def test_StyleOptions(self):
-        opts = styling.StyleOptions(
+        styling.StyleOptions(
             icon_fmt_name="blues",
             icon_color="values0",
             icon_n_colors=5,
@@ -54,8 +54,7 @@ class TestStylingFunctions(unittest.TestCase):
 
     def test_random_color(self):
         c = color.random_color()
-        self.assertIsInstance(c, str)
-        self.assertTrue(len(c), 8)
+        self.assertIsInstance(c, color.Color)
 
     def test_make_style(self):
         ns = "{http://www.opengis.net/kml/2.2}"
