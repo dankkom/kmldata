@@ -64,12 +64,12 @@ class ColorMap:
         }
 
     def get_color(self, digit: int) -> Color:
-        if digit > self.n_colors-1 or digit < 0:
+        if digit not in self.mapping:
             raise ValueError(f"Invalid digit value: {digit}")
         return self.mapping[digit]
 
     def __getitem__(self, digit: int):
-        if digit > self.n_colors-1 or digit < 0:
+        if digit not in self.mapping:
             raise ValueError(f"Invalid digit value: {digit}")
         return self.get_color(digit)
 
