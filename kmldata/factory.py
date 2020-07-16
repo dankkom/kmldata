@@ -106,8 +106,9 @@ def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
     # Style
     style_url = styling.get_style_url_from_row(row)
     placemark.append(KML.styleUrl(style_url))
-    description = make_description(row, opt.data_cols)
-    placemark.append(description)
+    if opt.data_cols:
+        description = make_description(row, opt.data_cols)
+        placemark.append(description)
     return placemark
 
 
