@@ -67,7 +67,7 @@ def make_style(
     style_name : str
         The name of style.
     icon_shape : str
-        URL of the image to use as icon.
+        Name of the image to use as icon.
     icon_color_hex : str
         Hex color code for the icon.
     label_color_hex : str

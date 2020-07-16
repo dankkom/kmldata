@@ -16,7 +16,7 @@ class TestStylingIntegrationFuntionsWithData(unittest.TestCase):
             icon_color="Color",
             icon_n_colors=5,
             icon_inverse_colors=False,
-            icon_shape="http://maps.google.com/mapfiles/kml/shapes/donut.png",
+            icon_shape="airports",
             label_color_palette="reds",
             label_color="Color",
             label_n_colors=5,
@@ -41,13 +41,18 @@ class TestStylingIntegrationFuntionsWithData(unittest.TestCase):
 class TestStylingStyleOptionsClass(unittest.TestCase):
 
     def test_StyleOptions(self):
-        styling.StyleOptions(
+        style = styling.StyleOptions(
             icon_fmt_name="blues",
             icon_color="values0",
             icon_n_colors=5,
             icon_inverse_colors=False,
-            icon_shape="donut",
+            icon_shape="airports",
         )
+        self.assertEqual(style.icon_fmt_name, "blues")
+        self.assertEqual(style.icon_color, "values0")
+        self.assertEqual(style.icon_n_colors, 5)
+        self.assertEqual(style.icon_inverse_colors, False)
+        self.assertEqual(style.icon_shape, "airports")
 
 
 class TestStylingFunctions(unittest.TestCase):
@@ -59,25 +64,22 @@ class TestStylingFunctions(unittest.TestCase):
     def test_make_style(self):
         ns = "{http://www.opengis.net/kml/2.2}"
         style_name = "style1"
-        icon_shape = "http://maps.google.com/mapfiles/kml/shapes/donut.png"
+        icon_shape_url = "http://maps.google.com/mapfiles/kml/shapes/airports.png"
         icon_color_hex = "FFFFFF00"
         label_color_hex = "FFFF000000"
         style = styling.make_style(
             style_name=style_name,
-            icon_shape=icon_shape,
+            icon_shape="airports",
             icon_color_hex=icon_color_hex,
             label_color_hex=label_color_hex,
         )
         self.assertIsInstance(style, type(KML.Style()))
         self.assertEqual(style.tag, ns + "Style")
         iconstyle = style.find(ns + "IconStyle")
-        self.assertEqual(
-            iconstyle.find(ns + "scale"), 1)
+        self.assertEqual(iconstyle.find(ns + "scale"), 1)
         icon = iconstyle.find(ns + "Icon")
-        self.assertEqual(
-            icon.find(ns + "href"), icon_shape)
-        self.assertEqual(
-            iconstyle.find(ns + "color"), icon_color_hex)
+        self.assertEqual(icon.find(ns + "href"), icon_shape_url)
+        self.assertEqual(iconstyle.find(ns + "color"), icon_color_hex)
 
 
 if __name__ == "__main__":
