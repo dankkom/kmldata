@@ -19,6 +19,7 @@ def get_digits(array, n):
     np.ndarray
         Array of bins digits.
     """
+    array = normalize(array)
     bins = np.linspace(0, 1, n+1)
     d = np.digitize(array, bins)
     d[d == n+1] = n

@@ -13,7 +13,7 @@ from typing import List
 import pandas as pd
 from pykml.factory import KML_ElementMaker as KML
 
-from .helper import get_digits, load_icon_shapes, normalize
+from .helper import get_digits, load_icon_shapes
 from . import color
 
 
@@ -186,13 +186,11 @@ def add_color_digit_column(
         Dataframe with IconColorDigit and LabelColorDigit columns.
     """
     if opts.icon_color:
-        normal_values = normalize(df[opts.icon_color])
-        icon_digits = get_digits(normal_values, n=opts.icon_n_colors)
+        icon_digits = get_digits(df[opts.icon_color], n=opts.icon_n_colors)
     else:
         icon_digits = 1
     if opts.label_color:
-        normal_values = normalize(df[opts.label_color])
-        label_digits = get_digits(normal_values, n=opts.label_n_colors)
+        label_digits = get_digits(df[opts.icon_color], n=opts.label_n_colors)
     else:
         label_digits = 1
     return df.assign(
