@@ -127,11 +127,13 @@ def make_styles(
     """
     styles = []
 
-    icon_color_interpolation = color.get_interpolation(
+    icon_cm = color.get_colormap_from_palette(
         palette_name=opts.icon_color_palette,
+        n_colors=opts.icon_n_colors,
     )
-    label_color_interpolation = color.get_interpolation(
+    label_cm = color.get_colormap_from_palette(
         palette_name=opts.label_color_palette,
+        n_colors=opts.label_n_colors,
     )
 
     it = data[[ICON_DIGIT, LABEL_DIGIT]].drop_duplicates().itertuples()
@@ -141,20 +143,8 @@ def make_styles(
         label_digit = row[2]
         style_name = get_style_name_from_digits(icon_digit, label_digit)
 
-        icon_color_hex = icon_color_interpolation.get_point(
-            n=color.get_value(
-                icon_digit-1,
-                opts.icon_n_colors,
-                inverse=opts.icon_inverse_colors,
-            ),
-        ).kml_hex()
-        label_color_hex = label_color_interpolation.get_point(
-            n=color.get_value(
-                label_digit-1,
-                opts.label_n_colors,
-                inverse=opts.label_inverse_colors,
-            ),
-        ).kml_hex()
+        icon_color_hex = icon_cm.get_color(digit=icon_digit-1).kml_hex()
+        label_color_hex = label_cm.get_color(digit=label_digit-1).kml_hex()
 
         style = make_style(
             style_name=style_name,

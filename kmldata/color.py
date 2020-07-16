@@ -1,7 +1,6 @@
 """Classes and functions to work with colors."""
 
 
-from math import sqrt
 import random
 
 import numpy as np
@@ -73,6 +72,14 @@ class ColorMap:
         if digit > self.n_colors-1 or digit < 0:
             raise ValueError(f"Invalid digit value: {digit}")
         return self.get_color(digit)
+
+
+def get_colormap_from_palette(palette_name, n_colors):
+    palette = PALETTE.get(palette_name, ((0, 0, 0), (1, 1, 1)))
+    color_a = Color(*palette[0])
+    color_b = Color(*palette[1])
+    cm = ColorMap(color_a, color_b, n_colors)
+    return cm
 
 
 def random_color(seed: int = 0) -> Color:
