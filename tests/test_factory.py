@@ -31,6 +31,36 @@ class TestKmlDataFunctions(unittest.TestCase):
         self.assertIsInstance(description, KML.description().__class__)
 
 
+class TestOptions(unittest.TestCase):
+
+    def setUp(self):
+        self.opts = Options(
+            lat="lat",
+            lon="lon",
+            data_cols=[],
+            name="",
+            folders=[],
+            altitude="",
+            files="",
+        )
+
+    def test_empty(self):
+        self.assertRaises(TypeError, lambda: Options())
+
+    def test_json(self):
+        j = self.opts.json()
+        self.assertIsInstance(j, dict)
+        self.assertSetEqual(
+            set(j.keys()),
+            set(
+                [
+                    "style", "lat", "lon", "data_cols", "name",
+                    "folders", "altitude", "files",
+                ]
+            )
+        )
+
+
 class TestKmlDataIntegration(unittest.TestCase):
 
     def setUp(self):
@@ -76,6 +106,14 @@ class TestKmlDataIntegration(unittest.TestCase):
         kmls_dict = make_kmls(
             data=self.data_sample,
             opt=self.opts,
+        )
+        self.assertIsInstance(kmls_dict, dict)
+        kmls_dict = make_kmls(
+            data=self.data_sample,
+            opt=Options(
+                lat="lat",
+                lon="lon",
+            ),
         )
         self.assertIsInstance(kmls_dict, dict)
 

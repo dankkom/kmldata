@@ -27,15 +27,19 @@ class StyleOptions:
     """Options to pass style to KML maker functions."""
 
     def __init__(self, **kwargs):
-        self.icon_color_palette = "viridis"
+        self.icon_colormap = color.ColorMap(
+            color_a=color.Color(1, 1, 1),
+            color_b=color.Color(1, 1, 1),
+            n_colors=1,
+        )
         self.icon_color = None  # Column name for color
-        self.icon_n_colors = 1
-        self.icon_inverse_colors = False
         self.icon_shape = "donut"
-        self.label_color_palette = "viridis"
+        self.label_colormap = color.ColorMap(
+            color_a=color.Color(1, 1, 1),
+            color_b=color.Color(1, 1, 1),
+            n_colors=1,
+        )
         self.label_color = None  # Column name for color
-        self.label_n_colors = 1
-        self.label_inverse_colors = False
         for key in kwargs:
             self.__setattr__(key, kwargs[key])
 
@@ -127,14 +131,8 @@ def make_styles(
     """
     styles = []
 
-    icon_cm = color.get_colormap_from_palette(
-        palette_name=opts.icon_color_palette,
-        n_colors=opts.icon_n_colors,
-    )
-    label_cm = color.get_colormap_from_palette(
-        palette_name=opts.label_color_palette,
-        n_colors=opts.label_n_colors,
-    )
+    icon_cm = opts.icon_colormap
+    label_cm = opts.label_colormap
 
     it = data[[ICON_DIGIT, LABEL_DIGIT]].drop_duplicates().itertuples()
 
@@ -176,11 +174,17 @@ def add_color_digit_column(
         Dataframe with IconColorDigit and LabelColorDigit columns.
     """
     if opts.icon_color:
-        icon_digits = get_digits(df[opts.icon_color], n=opts.icon_n_colors)
+        icon_digits = get_digits(
+            df[opts.icon_color],
+            n=opts.icon_colormap.n_colors,
+        )
     else:
         icon_digits = 1
     if opts.label_color:
-        label_digits = get_digits(df[opts.icon_color], n=opts.label_n_colors)
+        label_digits = get_digits(
+            df[opts.icon_color],
+            n=opts.label_colormap.n_colors,
+        )
     else:
         label_digits = 1
     return df.assign(

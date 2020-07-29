@@ -7,20 +7,24 @@ from kmldata import color, styling
 from tests import make_data_sample
 
 
-class TestStylingIntegrationFuntionsWithData(unittest.TestCase):
+class TestStylingIntegrationFunctionsWithData(unittest.TestCase):
 
     def setUp(self):
         self.data = make_data_sample()
         self.opts = styling.StyleOptions(
-            icon_color_palette="blues",
+            icon_colormap=color.ColorMap(
+                color_a=color.Color(1, 1, 1),
+                color_b=color.Color(1, 1, 1),
+                n_colors=1,
+            ),
             icon_color="Color",
-            icon_n_colors=5,
-            icon_inverse_colors=False,
             icon_shape="airports",
-            label_color_palette="reds",
+            label_colormap=color.ColorMap(
+                color_a=color.Color(1, 1, 1),
+                color_b=color.Color(1, 1, 1),
+                n_colors=1,
+            ),
             label_color="Color",
-            label_n_colors=5,
-            label_inverse_colors=True,
         )
 
     def test_add_color_digit_column(self):
@@ -40,19 +44,54 @@ class TestStylingIntegrationFuntionsWithData(unittest.TestCase):
 
 class TestStylingStyleOptionsClass(unittest.TestCase):
 
-    def test_StyleOptions(self):
-        style = styling.StyleOptions(
-            icon_fmt_name="blues",
+    def setUp(self):
+        self.style = styling.StyleOptions(
+            icon_colormap=color.ColorMap(
+                color_a=color.Color(0, 0, 0),
+                color_b=color.Color(1, 1, 1),
+                n_colors=4,
+            ),
             icon_color="values0",
-            icon_n_colors=5,
-            icon_inverse_colors=False,
             icon_shape="airports",
+            label_colormap=color.ColorMap(
+                color_a=color.Color(0, 0, 0),
+                color_b=color.Color(1, 1, 1),
+                n_colors=4,
+            ),
+            label_color="values1",
         )
-        self.assertEqual(style.icon_fmt_name, "blues")
-        self.assertEqual(style.icon_color, "values0")
-        self.assertEqual(style.icon_n_colors, 5)
-        self.assertEqual(style.icon_inverse_colors, False)
-        self.assertEqual(style.icon_shape, "airports")
+
+    def test_icon_colormap(self):
+        self.assertIsInstance(self.style.icon_colormap, color.ColorMap)
+
+    def test_icon_color(self):
+        self.assertEqual(self.style.icon_color, "values0")
+        self.assertIsInstance(self.style.icon_color, str)
+
+    def test_icon_shape(self):
+        self.assertEqual(self.style.icon_shape, "airports")
+
+    def test_label_color(self):
+        self.assertIsInstance(self.style.label_color, str)
+
+    def test_label_colormap(self):
+        self.assertIsInstance(self.style.label_colormap, color.ColorMap)
+
+    def test_json(self):
+        j = self.style.json()
+        self.assertIsInstance(j, dict)
+        self.assertSetEqual(
+            set(j.keys()),
+            set(
+                [
+                    "icon_colormap",
+                    "icon_color",
+                    "icon_shape",
+                    "label_colormap",
+                    "label_color",
+                ],
+            )
+        )
 
 
 class TestStylingFunctions(unittest.TestCase):

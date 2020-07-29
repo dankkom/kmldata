@@ -21,10 +21,10 @@ class Color:
 
     __slots__ = ("r", "g", "b")
 
-    def __init__(self, r=0, g=0, b=0):
-        self.r = r
-        self.g = g
-        self.b = b
+    def __init__(self, r: float = 0, g: float = 0, b: float = 0):
+        self.r = float(r)
+        self.g = float(g)
+        self.b = float(b)
 
     def kml_hex(self):
         """Get hexadecimal string code for RGB color in KML format.
@@ -44,6 +44,12 @@ class Color:
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.r}, {self.g}, {self.b})"
+
+    def __eq__(self, o):
+        r = self.r == o.r
+        g = self.g == o.g
+        b = self.b == o.b
+        return r and g and b
 
 
 class ColorMap:
@@ -69,8 +75,6 @@ class ColorMap:
         return self.mapping[digit]
 
     def __getitem__(self, digit: int):
-        if digit not in self.mapping:
-            raise ValueError(f"Invalid digit value: {digit}")
         return self.get_color(digit)
 
 
@@ -96,11 +100,11 @@ def random_color(seed: int = 0) -> Color:
         Random color object.
     """
     random.seed(seed)
-    r = hex(random.randint(0, 255))[2:]
+    r = random.random()
     random.seed(seed+1)
-    g = hex(random.randint(0, 255))[2:]
+    g = random.random()
     random.seed(seed+2)
-    b = hex(random.randint(0, 255))[2:]
+    b = random.random()
     return Color(r=r, g=g, b=b)
 
 
