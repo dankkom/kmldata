@@ -1,7 +1,7 @@
 """Transform tabular data into KML and vice-versa."""
 
 
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 
 
 from .factory import Options, make_kml, make_kmls, save_kml
