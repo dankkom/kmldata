@@ -35,7 +35,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     license="GNU GPLv3",
     keywords="kml geospatial pandas GIS",
-    url="https://github.com/dkkomesu/kmldata",
+    url="https://github.com/dankkom/kmldata",
     packages=setuptools.find_packages(include=["kmldata"]),
     install_requires=["lxml", "pykml", "pandas", "numpy", "xlrd", "openpyxl"],
     python_requires=">=3.8, <4",
@@ -43,9 +43,6 @@ setuptools.setup(
         "kmldata": ["icons.json"],
     },
     include_package_data=True,
-    project_urls={
-        "Source Code": "https://github.com/dkkomesu/kmldata",
-    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",

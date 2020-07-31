@@ -7,7 +7,7 @@
 `kmldata` isn't published on PyPI yet. Install it from GitHub repository:
 
 ```shell
-pip install git+https://github.com/dkkomesu/kmldata#egg=kmldata
+pip install git+https://github.com/dankkom/kmldata#egg=kmldata
 ```
 
 ## Usage
