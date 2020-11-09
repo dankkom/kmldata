@@ -22,9 +22,18 @@ class Color:
     __slots__ = ("r", "g", "b")
 
     def __init__(self, r: float = 0, g: float = 0, b: float = 0):
-        self.r = float(r)
-        self.g = float(g)
-        self.b = float(b)
+        for v in (r, g, b):
+            if v > 1:
+                raise ValueError(
+                    "Color components values must be between 0-1\n"
+                    f"Values passed: {r}, {g}, {b}"
+                )
+            if v < 0:
+                raise ValueError(
+                    "Color components values must be between 0-1\n"
+                    f"Values passed: {r}, {g}, {b}"
+                )
+        self.r, self.g, self.b = float(r), float(g), float(b)
 
     def kml_hex(self):
         """Get hexadecimal string code for RGB color in KML format.
