@@ -49,7 +49,7 @@ class Color:
         return f"#FF{b:02X}{g:02X}{r:02X}"
 
     def __str__(self):
-        return self.kml_hex()
+        return f"{self.__class__.__name__}({self.r}, {self.g}, {self.b})"
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.r}, {self.g}, {self.b})"
