@@ -8,8 +8,8 @@ class TestColor(unittest.TestCase):
     def test_Color(self):
         white = color.Color(1, 1, 1)
         black = color.Color(0, 0, 0)
-        self.assertEqual(str(white), "#FFFFFFFF")
-        self.assertEqual(str(black), "#FF000000")
+        self.assertEqual(str(white), "Color(1.0, 1.0, 1.0)")
+        self.assertEqual(str(black), "Color(0.0, 0.0, 0.0)")
         self.assertEqual(repr(white), "Color(1.0, 1.0, 1.0)")
         self.assertEqual(repr(black), "Color(0.0, 0.0, 0.0)")
 
