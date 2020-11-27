@@ -38,7 +38,7 @@ setuptools.setup(
     url="https://github.com/dankkom/kmldata",
     packages=setuptools.find_packages(include=["kmldata"]),
     install_requires=["lxml", "pykml", "pandas", "numpy"],
-    python_requires=">=3.8, <4",
+    python_requires=">=3.6, <4",
     package_data={
         "kmldata": ["icons.json"],
     },
