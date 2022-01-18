@@ -38,6 +38,14 @@ kmldata.save_kml(kml, "data.kml")
 df = kmldata.read_kml("data.kml")
 ```
 
+## TODOs
+
+- Linestring
+- Polygon
+- LinearRing
+
 ## License
 
 This package is licensed under GNU GPLv3.
+
+https://developers.google.com/kml/documentation/kmlreference

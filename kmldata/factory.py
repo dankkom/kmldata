@@ -18,7 +18,8 @@ class Options:
     Required parameters
     -------------------
     lat, lon : float
-        The column names of a Pandas DataFrame coordinates (latitude, longitude)
+        The column names of a Pandas DataFrame coordinates (latitude,
+        longitude)
     """
 
     def __init__(self, lat, lon, **kwargs):
@@ -79,7 +80,8 @@ def make_description(row: pd.core.series.Series, data_cols) -> KML.description:
 
 
 def make_placemark(row: pd.core.series.Series, opt: Options) -> KML.Placemark:
-    """Create a placemark KML object with data in `row` and configuration in opt
+    """Create a placemark KML object with data in `row` and configuration in
+    opt
 
     Parameters
     ----------

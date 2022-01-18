@@ -110,9 +110,9 @@ def random_color(seed: int = 0) -> Color:
     """
     random.seed(seed)
     r = random.random()
-    random.seed(seed+1)
+    random.seed(seed + 1)
     g = random.random()
-    random.seed(seed+2)
+    random.seed(seed + 2)
     b = random.random()
     return Color(r=r, g=g, b=b)
 

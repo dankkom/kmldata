@@ -101,8 +101,32 @@ def get_placemarks(doc: KML.Document) -> KML.Placemark:
     KML.Placemark
         A KML Placemark object.
     """
-    for folder in doc.xpath("./t:Placemark", namespaces=NS):
-        yield folder
+    for placemark in doc.xpath("./t:Placemark", namespaces=NS):
+        yield placemark
+
+
+def get_points(placemark: KML.Placemark) -> KML.LineString:
+    for point in placemark.xpath("./t:Point", namespaces=NS):
+        yield point
+
+
+def get_line_strings(placemark: KML.Placemark) -> KML.LineString:
+    for line_string in placemark.xpath("./t:LineString", namespaces=NS):
+        yield line_string
+
+
+def get_polygons(placemark: KML.Placemark) -> KML.Polygon:
+    for polygon in placemark.xpath("./t:Polygon", namespaces=NS):
+        yield polygon
+
+
+def get_geometry_coordinates(element: Union[KML.LineString, KML.LinearRing]):
+    text = element.coordinates.text
+    coord = [
+        tuple(float(j) for j in i.strip().split(","))
+        for i in text.split("\n")
+    ]
+    return coord
 
 
 def get_SimpleData(placemark: KML.Placemark) -> Dict[str, str]:
